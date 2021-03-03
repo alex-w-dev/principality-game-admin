@@ -1,16 +1,23 @@
 import * as React from "react";
 import { hot } from "react-hot-loader";
 
-const reactLogo = require("./../assets/img/react_logo.svg");
+// const reactLogo = require("./../assets/img/react_logo.svg");
 import "./../assets/scss/App.scss";
+import { MainConfigService } from '../services/main-config.service';
 
 class App extends React.Component<Record<string, unknown>, undefined> {
   public render() {
     return (
       <div className="app">
-        <h1>Hello World!</h1>
-        <p>Foo to the barz</p>
-        <img src={reactLogo.default} height="480" />
+        <div className="header">
+          <nav>
+            <a href="/">home</a>
+          </nav>
+          <button
+            onClick={() => MainConfigService.export()}
+          >Export</button>
+        </div>
+        {/*<img src={reactLogo.default} height="480" />*/}
       </div>
     );
   }
