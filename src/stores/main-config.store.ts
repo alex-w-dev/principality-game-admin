@@ -1,4 +1,4 @@
-export interface IGameProgressParam {
+export interface IGameVariable {
   code: string;
   initialValue: number;
   max: number | null;
@@ -6,11 +6,11 @@ export interface IGameProgressParam {
 }
 
 export interface IMainConfig {
-  gameProgressParams: IGameProgressParam[];
+  variables: IGameVariable[];
 }
 
-export class MainConfigService {
-  static mainConfig: IMainConfig = MainConfigService.getDefaultConfig();
+export class MainConfigStore {
+  static mainConfig: IMainConfig = MainConfigStore.getDefaultConfig();
 
   static export(): void {
     this.saveInLocalStorage();
@@ -44,7 +44,7 @@ export class MainConfigService {
 
   static getDefaultConfig(): IMainConfig {
     return {
-      gameProgressParams: [
+      variables: [
         {
           code: "step",
           initialValue: 0,
