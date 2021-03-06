@@ -27,9 +27,15 @@ export interface IStepReward {
   variableCode: IVariable['code'];
 }
 
-export interface IStepBranch {
-  text: string;
-  voiceUrl: string;
+export interface ILocale<T> {
+  en: T;
+  ru: T;
+}
+
+export interface IAnswer {
+  conditionBlock: IConditionBlock;
+  text: ILocale<string>;
+  voiceUrl: ILocale<string>;
   imageUrl: string;
   rewards: IStepReward[]
 }
@@ -41,15 +47,17 @@ export interface IConditionBlock {
 
 export interface IStep {
   conditionBlock: IConditionBlock;
-  text: string;
+  text: ILocale<string>;
+  voiceUrl: ILocale<string>;
   imageUrl: string;
-  branches: IStepBranch[]
+  answers: IAnswer[]
 }
 
 export interface IMainConfig {
   variables: IVariable[];
-  steps: IStep[];
-  endConditions: IStep[];
+  commonSteps: IStep[];
+  criticalSteps: IStep[];
+  randomSteps: IStep[];
 }
 
 export class MainConfigStore {
@@ -103,8 +111,9 @@ export class MainConfigStore {
           initialValue: 100,
         },
       ],
-      steps: [],
-      endConditions: [],
+      commonSteps: [],
+      criticalSteps: [],
+      randomSteps: [],
     };
   }
 
@@ -121,7 +130,11 @@ export class MainConfigStore {
     if (
       dataToSave.code !== variable.code &&
       this.mainConfig.variables.filter(v => variable.code === v.code).length === 1 &&
-      JSON.stringify(this.mainConfig.steps).indexOf(`"${variable.code}"`) !== -1
+      (
+        JSON.stringify(this.mainConfig.commonSteps).indexOf(`"${variable.code}"`) !== -1 ||
+        JSON.stringify(this.mainConfig.criticalSteps).indexOf(`"${variable.code}"`) !== -1 ||
+        JSON.stringify(this.mainConfig.randomSteps).indexOf(`"${variable.code}"`) !== -1
+      )
     ) {
       alert(`Эта переменная уже гдето используется! Невозможно переименовать ${variable.code}!`);
 
