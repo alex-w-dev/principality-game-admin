@@ -45,7 +45,7 @@ export interface IConditionBlock {
   conditions: (ICondition | IConditionBlock)[];
 }
 
-export interface IStep {
+export interface IEvent {
   conditionBlock: IConditionBlock;
   text: ILocale<string>;
   voiceUrl: ILocale<string>;
@@ -55,9 +55,9 @@ export interface IStep {
 
 export interface IMainConfig {
   variables: IVariable[];
-  commonSteps: IStep[];
-  criticalSteps: IStep[];
-  randomSteps: IStep[];
+  commonEvents: IEvent[];
+  criticalEvents: IEvent[];
+  randomEvents: IEvent[];
 }
 
 export class MainConfigStore {
@@ -111,9 +111,9 @@ export class MainConfigStore {
           initialValue: 100,
         },
       ],
-      commonSteps: [],
-      criticalSteps: [],
-      randomSteps: [],
+      commonEvents: [],
+      criticalEvents: [],
+      randomEvents: [],
     };
   }
 
@@ -131,9 +131,9 @@ export class MainConfigStore {
       dataToSave.code !== variable.code &&
       this.mainConfig.variables.filter(v => variable.code === v.code).length === 1 &&
       (
-        JSON.stringify(this.mainConfig.commonSteps).indexOf(`"${variable.code}"`) !== -1 ||
-        JSON.stringify(this.mainConfig.criticalSteps).indexOf(`"${variable.code}"`) !== -1 ||
-        JSON.stringify(this.mainConfig.randomSteps).indexOf(`"${variable.code}"`) !== -1
+        JSON.stringify(this.mainConfig.commonEvents).indexOf(`"${variable.code}"`) !== -1 ||
+        JSON.stringify(this.mainConfig.criticalEvents).indexOf(`"${variable.code}"`) !== -1 ||
+        JSON.stringify(this.mainConfig.randomEvents).indexOf(`"${variable.code}"`) !== -1
       )
     ) {
       alert(`Эта переменная уже гдето используется! Невозможно переименовать ${variable.code}!`);
