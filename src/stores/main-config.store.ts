@@ -3,18 +3,19 @@ import { makeAutoObservable } from 'mobx';
 export interface IGameVariable {
   code: string;
   initialValue: number;
-  max: number | null;
-  min: number | null;
 }
 
 export interface IMainConfig {
   variables: IGameVariable[];
+  steps: IGameVariable[];
 }
 
 export class MainConfigStore {
   mainConfig: IMainConfig = this.getDefaultConfig();
 
   constructor() {
+    // this.loadFromLocalStorage();
+
     makeAutoObservable(this)
   }
 
@@ -52,18 +53,38 @@ export class MainConfigStore {
     return {
       variables: [
         {
-          code: "step",
+          code: "STEP",
           initialValue: 0,
-          max: null,
-          min: null,
         },
         {
-          code: "gold",
+          code: "GOLD",
           initialValue: 100,
-          max: null,
-          min: 0,
         },
       ],
+      steps: [],
     };
+  }
+
+  setVariableData(variable: IGameVariable, data: Partial<IGameVariable>): void {
+    const dataToSave = {
+      ...variable,
+      ...data,
+    }
+
+    if (isNaN(dataToSave.initialValue)) {
+      dataToSave.initialValue = 0;
+    }
+
+    if (
+      dataToSave.code !== variable.code &&
+      this.mainConfig.steps.some(s => s.code === variable.code)
+    ) {
+      alert(`Эта переменная уже гдето используется! Невозможно переименовать ${variable.code}!`);
+
+      return;
+    }
+
+    Object.assign(variable, dataToSave);
+    this.saveInLocalStorage();
   }
 }
