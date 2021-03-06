@@ -7,6 +7,7 @@ import StepsEditor from '../../pages/StepsEditor/StepsEditor';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import GameTesting from '../../pages/GameTesting/GameTesting';
 import styles from './App.module.scss'
+import ExportButton from '../ExportButton/ExportButton';
 
 class App extends React.Component<Record<string, unknown>, undefined> {
   public render() {
@@ -19,9 +20,7 @@ class App extends React.Component<Record<string, unknown>, undefined> {
               <Link to={'/steps-editor'}>Шаги</Link>
               <Link to={'/game-testing'}>Тестирование</Link>
             </nav>
-            <button
-              onClick={() => MainConfigStore.export()}
-            >Export</button>
+            <ExportButton />
           </div>
           <Route exact path="/">
             <VariablesEditor />

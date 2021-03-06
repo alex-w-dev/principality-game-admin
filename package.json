@@ -66,6 +66,8 @@
   },
   "dependencies": {
     "@types/react-router-dom": "^5.1.7",
+    "mobx": "^6.1.8",
+    "mobx-react": "^7.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^5.2.0",

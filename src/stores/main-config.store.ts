@@ -1,3 +1,5 @@
+import { makeAutoObservable } from 'mobx';
+
 export interface IGameVariable {
   code: string;
   initialValue: number;
@@ -10,9 +12,13 @@ export interface IMainConfig {
 }
 
 export class MainConfigStore {
-  static mainConfig: IMainConfig = MainConfigStore.getDefaultConfig();
+  mainConfig: IMainConfig = this.getDefaultConfig();
 
-  static export(): void {
+  constructor() {
+    makeAutoObservable(this)
+  }
+
+  export(): void {
     this.saveInLocalStorage();
 
     const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(
@@ -26,23 +32,23 @@ export class MainConfigStore {
     document.body.removeChild(dlAnchorElem);
   }
 
-  static loadFromLocalStorage(): void {
+  loadFromLocalStorage(): void {
     const lsMainConfig = localStorage.getItem("mainGameConfig");
 
     if (lsMainConfig) {
-      this.import(JSON.parse(lsMainConfig));
+      this.setMainConfig(JSON.parse(lsMainConfig));
     }
   }
 
-  static saveInLocalStorage(): void {
+  saveInLocalStorage(): void {
     localStorage.setItem("mainGameConfig", JSON.stringify(this.mainConfig));
   }
 
-  static import(mainConfig: IMainConfig): void {
+  setMainConfig(mainConfig: IMainConfig): void {
     this.mainConfig = mainConfig;
   }
 
-  static getDefaultConfig(): IMainConfig {
+  getDefaultConfig(): IMainConfig {
     return {
       variables: [
         {
