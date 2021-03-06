@@ -1,12 +1,17 @@
 import React from 'react';
 import { useMainConfigStore } from '../../hooks/use-main-config-store';
+import { inject, observer } from 'mobx-react';
 
-export default function ExportButton () {
-  const mainConfigStore = useMainConfigStore();
+export default inject()(
+  observer(
+    function ExportButton () {
+      const mainConfigStore = useMainConfigStore();
 
-  return <button
-    onClick={() => mainConfigStore.export()}
-  >
-    Export {mainConfigStore.mainConfig.variables.length}
-  </button>
-}
+      return <button
+        onClick={() => mainConfigStore.export()}
+      >
+        Export {mainConfigStore.mainConfig.variables.length}
+      </button>
+    }
+  )
+)

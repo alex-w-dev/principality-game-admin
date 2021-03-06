@@ -40,13 +40,26 @@ export interface IAnswer {
   rewards: IStepReward[]
 }
 
+export enum ConditionBlockType {
+  And = 0,
+  Or = 1,
+}
+
 export interface IConditionBlock {
-  conditionType: 'or' | 'and';
+  conditionType: ConditionBlockType;
   conditions: (ICondition | IConditionBlock)[];
 }
 
+export enum EventType {
+  Critical = 0,
+  Common = 1,
+  Random = 2,
+}
+
 export interface IEvent {
+  type: EventType;
   conditionBlock: IConditionBlock;
+  title: ILocale<string>;
   text: ILocale<string>;
   voiceUrl: ILocale<string>;
   imageUrl: string;
@@ -55,9 +68,7 @@ export interface IEvent {
 
 export interface IMainConfig {
   variables: IVariable[];
-  commonEvents: IEvent[];
-  criticalEvents: IEvent[];
-  randomEvents: IEvent[];
+  events: IEvent[];
 }
 
 export class MainConfigStore {
@@ -111,10 +122,27 @@ export class MainConfigStore {
           initialValue: 100,
         },
       ],
-      commonEvents: [],
-      criticalEvents: [],
-      randomEvents: [],
+      events: [],
     };
+  }
+
+  addNewVariable(): void {
+    this.mainConfig.variables.push({
+      code: 'NEW_VAR',
+      initialValue: 0,
+    });
+  }
+
+  deleteVariable(variable: IVariable): void {
+    if (
+      this.isVariableInUse(variable)
+    ) {
+      alert(`Эта переменная уже гдето используется! Невозможно удалить ${variable.code}!`);
+
+      return;
+    }
+
+    this.mainConfig.variables.splice(this.mainConfig.variables.indexOf(variable), 1);
   }
 
   setVariableData(variable: IVariable, data: Partial<IVariable>): void {
@@ -129,12 +157,7 @@ export class MainConfigStore {
 
     if (
       dataToSave.code !== variable.code &&
-      this.mainConfig.variables.filter(v => variable.code === v.code).length === 1 &&
-      (
-        JSON.stringify(this.mainConfig.commonEvents).indexOf(`"${variable.code}"`) !== -1 ||
-        JSON.stringify(this.mainConfig.criticalEvents).indexOf(`"${variable.code}"`) !== -1 ||
-        JSON.stringify(this.mainConfig.randomEvents).indexOf(`"${variable.code}"`) !== -1
-      )
+      this.isVariableInUse(variable)
     ) {
       alert(`Эта переменная уже гдето используется! Невозможно переименовать ${variable.code}!`);
 
@@ -143,5 +166,38 @@ export class MainConfigStore {
 
     Object.assign(variable, dataToSave);
     this.saveInLocalStorage();
+  }
+
+  addNewEvent(eventType: EventType): void {
+    this.mainConfig.events.push({
+      imageUrl: '',
+      title: {
+        en: 'New Event',
+        ru: 'Новое событие',
+      },
+      text: {
+        en: 'New Event English Description Text',
+        ru: 'Новой событие описанное на русском языке',
+      },
+      type: eventType,
+      voiceUrl: {
+        ru: '',
+        en: ''
+      },
+      conditionBlock: {
+        conditionType: ConditionBlockType.And,
+        conditions: [],
+      },
+      answers: [],
+    })
+  }
+
+  private isVariableInUse(variable: IVariable): boolean {
+    return this.mainConfig.variables.filter(v => variable.code === v.code).length === 1 &&
+      (
+        JSON.stringify(this.mainConfig.events).indexOf(`"${variable.code}"`) !== -1 /*||
+        JSON.stringify(this.mainConfig.criticalEvents).indexOf(`"${variable.code}"`) !== -1 ||
+        JSON.stringify(this.mainConfig.randomEvents).indexOf(`"${variable.code}"`) !== -1*/
+      );
   }
 }
