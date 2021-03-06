@@ -17,7 +17,9 @@ class App extends React.Component<Record<string, unknown>, undefined> {
           <div className={styles.header}>
             <nav>
               <Link to={'/'}>Переменные</Link>
-              <Link to={'/steps-editor'}>Шаги</Link>
+              <Link to={'/steps-editor'}>Сюжетные Шаги</Link>
+              <Link to={'/random-event'}>Случайное Шаги</Link>
+              <Link to={'/steps-editor'}>Критические события</Link>
               <Link to={'/game-testing'}>Тестирование</Link>
             </nav>
             <ExportButton />

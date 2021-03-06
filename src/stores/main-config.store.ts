@@ -1,13 +1,55 @@
 import { makeAutoObservable } from 'mobx';
 
-export interface IGameVariable {
+export interface IVariable {
   code: string;
   initialValue: number;
 }
 
+export enum IConditionSign {
+  Equal = 0,
+  LessThan = 1,
+  GreaterThan = 2,
+}
+
+export interface ICondition {
+  variableCode: IVariable['code'];
+  sign: IConditionSign,
+  value: number;
+}
+
+export enum StepRewardOperation {
+  Increase = 0,
+  Decrease = 1,
+}
+
+export interface IStepReward {
+  operation: StepRewardOperation;
+  variableCode: IVariable['code'];
+}
+
+export interface IStepBranch {
+  text: string;
+  voiceUrl: string;
+  imageUrl: string;
+  rewards: IStepReward[]
+}
+
+export interface IConditionBlock {
+  conditionType: 'or' | 'and';
+  conditions: (ICondition | IConditionBlock)[];
+}
+
+export interface IStep {
+  conditionBlock: IConditionBlock;
+  text: string;
+  imageUrl: string;
+  branches: IStepBranch[]
+}
+
 export interface IMainConfig {
-  variables: IGameVariable[];
-  steps: IGameVariable[];
+  variables: IVariable[];
+  steps: IStep[];
+  endConditions: IStep[];
 }
 
 export class MainConfigStore {
@@ -62,10 +104,11 @@ export class MainConfigStore {
         },
       ],
       steps: [],
+      endConditions: [],
     };
   }
 
-  setVariableData(variable: IGameVariable, data: Partial<IGameVariable>): void {
+  setVariableData(variable: IVariable, data: Partial<IVariable>): void {
     const dataToSave = {
       ...variable,
       ...data,
@@ -77,7 +120,8 @@ export class MainConfigStore {
 
     if (
       dataToSave.code !== variable.code &&
-      this.mainConfig.steps.some(s => s.code === variable.code)
+      this.mainConfig.variables.filter(v => variable.code === v.code).length === 1 &&
+      JSON.stringify(this.mainConfig.steps).indexOf(`"${variable.code}"`) !== -1
     ) {
       alert(`Эта переменная уже гдето используется! Невозможно переименовать ${variable.code}!`);
 
