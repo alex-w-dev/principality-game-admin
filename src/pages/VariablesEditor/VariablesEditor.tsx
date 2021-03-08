@@ -20,6 +20,8 @@ export default inject()(
         <tr>
           <td>Код</td>
           <td>Первоначатьное значение</td>
+          <td>Минимальное значение</td>
+          <td>Максимальное значение</td>
           <td>Действия</td>
         </tr>
         </thead>
@@ -37,8 +39,28 @@ export default inject()(
             <td>
               <input
                 type="number"
-                value={variable.initialValue}
-                onChange={(a) => mainConfigStore.setVariableData(variable, { initialValue: parseInt(a.target.value) })}
+                value={variable.initial}
+                onChange={(a) => {
+                  mainConfigStore.setVariableData(variable, { initial: a.target.value === '' ? 0 : parseInt(a.target.value) })
+                }}
+              />
+            </td>
+            <td>
+              <input
+                type="number"
+                value={variable.min}
+                onChange={(a) => {
+                  mainConfigStore.setVariableData(variable, { min: a.target.value === '' ? a.target.value : parseInt(a.target.value) })}
+                }
+              />
+            </td>
+            <td>
+              <input
+                type="number"
+                value={variable.max}
+                onChange={(a) => {
+                  mainConfigStore.setVariableData(variable, { max: a.target.value === '' ? a.target.value : parseInt(a.target.value) })}
+                }
               />
             </td>
             <td>

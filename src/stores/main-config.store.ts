@@ -2,7 +2,9 @@ import { makeAutoObservable } from 'mobx';
 
 export interface IVariable {
   code: string;
-  initialValue: number;
+  initial: number;
+  min: number | '';
+  max: number | '';
 }
 
 export enum IConditionSign {
@@ -115,11 +117,15 @@ export class MainConfigStore {
       variables: [
         {
           code: "STEP",
-          initialValue: 0,
+          initial: 0,
+          max: '',
+          min: 0,
         },
         {
           code: "GOLD",
-          initialValue: 100,
+          initial: 100,
+          max: '',
+          min: 0,
         },
       ],
       events: [],
@@ -129,7 +135,9 @@ export class MainConfigStore {
   addNewVariable(): void {
     this.mainConfig.variables.push({
       code: 'NEW_VAR',
-      initialValue: 0,
+      initial: 0,
+      max: '',
+      min: '',
     });
   }
 
@@ -151,10 +159,6 @@ export class MainConfigStore {
       ...data,
     }
 
-    if (isNaN(dataToSave.initialValue)) {
-      dataToSave.initialValue = 0;
-    }
-
     if (
       dataToSave.code !== variable.code &&
       this.isVariableInUse(variable)
@@ -173,7 +177,7 @@ export class MainConfigStore {
       imageUrl: '',
       title: {
         en: 'New Event',
-        ru: 'Новое событие',
+        ru: 'Умерать от голода',
       },
       text: {
         en: 'New Event English Description Text',
@@ -186,7 +190,23 @@ export class MainConfigStore {
       },
       conditionBlock: {
         conditionType: ConditionBlockType.And,
-        conditions: [],
+        conditions: [
+          {
+            variableCode: 'STEP',
+            sign: IConditionSign.GreaterThan,
+            value: 5,
+          },
+          {
+            conditionType: ConditionBlockType.Or,
+            conditions: [
+              {
+                variableCode: 'GOLD',
+                sign: IConditionSign.LessThan,
+                value: 1,
+              },
+            ]
+          }
+        ],
       },
       answers: [],
     })
@@ -195,7 +215,7 @@ export class MainConfigStore {
   private isVariableInUse(variable: IVariable): boolean {
     return this.mainConfig.variables.filter(v => variable.code === v.code).length === 1 &&
       (
-        JSON.stringify(this.mainConfig.events).indexOf(`"${variable.code}"`) !== -1 /*||
+        JSON.stringify(this.mainConfig.events).indexOf(`"variableCode":"${variable.code}"`) !== -1 /*||
         JSON.stringify(this.mainConfig.criticalEvents).indexOf(`"${variable.code}"`) !== -1 ||
         JSON.stringify(this.mainConfig.randomEvents).indexOf(`"${variable.code}"`) !== -1*/
       );
