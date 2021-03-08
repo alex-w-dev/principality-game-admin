@@ -177,7 +177,7 @@ export class MainConfigStore {
       imageUrl: '',
       title: {
         en: 'New Event',
-        ru: 'Умерать от голода',
+        ru: 'Новое событие',
       },
       text: {
         en: 'New Event English Description Text',
@@ -197,12 +197,22 @@ export class MainConfigStore {
             value: 5,
           },
           {
+            variableCode: 'GOLD',
+            sign: IConditionSign.LessThan,
+            value: 1,
+          },
+          {
             conditionType: ConditionBlockType.Or,
             conditions: [
               {
                 variableCode: 'GOLD',
-                sign: IConditionSign.LessThan,
+                sign: IConditionSign.Equal,
                 value: 1,
+              },
+              {
+                variableCode: 'STEP',
+                sign: IConditionSign.Equal,
+                value: 5,
               },
             ]
           }

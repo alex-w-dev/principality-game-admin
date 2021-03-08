@@ -9,6 +9,7 @@ import styles from './App.module.scss'
 import ExportButton from '../ExportButton/ExportButton';
 import { EventType } from '../../stores/main-config.store';
 import { ImportButton } from '../ImportButton/ImportButton';
+import EventEditor from '../EventEditor/EventEditor';
 
 class App extends React.Component<Record<string, unknown>, undefined> {
   public render() {
@@ -46,6 +47,9 @@ class App extends React.Component<Record<string, unknown>, undefined> {
           </Route>
           <Route path="/game-testing">
             <GameTesting />
+          </Route>
+          <Route path="/edit-event/:index" >
+            <EventEditor />
           </Route>
 
 

@@ -3,6 +3,7 @@ import styles from './EventsEditor.module.scss';
 import { inject, observer } from 'mobx-react';
 import { useMainConfigStore } from '../../hooks/use-main-config-store';
 import { EventType } from '../../stores/main-config.store';
+import { Link } from 'react-router-dom';
 
 export default inject()(
   observer(
@@ -20,11 +21,15 @@ export default inject()(
         {
           mainConfigStore.mainConfig.events
             .filter(e => e.type === props.eventType)
-            .map((e, i) => {
+            .map((e, index) => {
               return <div
-                key={i}
+                key={index}
               >
-                {e.title.ru}
+                <Link
+                  to={`/edit-event/${index}`}
+                >
+                  {index}. {e.title.ru}
+                </Link>
               </div>
             })
         }
