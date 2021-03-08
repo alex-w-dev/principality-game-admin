@@ -1,0 +1,65 @@
+{
+  "variables": [
+    {
+      "code": "STEP",
+      "initial": 0,
+      "max": "",
+      "min": 0
+    },
+    {
+      "code": "GOLD",
+      "initial": 100,
+      "max": "",
+      "min": 0
+    }
+  ],
+  "events": [
+    {
+      "imageUrl": "",
+      "title": {
+        "en": "New Event",
+        "ru": "Новое событие"
+      },
+      "text": {
+        "en": "New Event English Description Text",
+        "ru": "Новой событие описанное на русском языке"
+      },
+      "type": 1,
+      "voiceUrl": {
+        "ru": "",
+        "en": ""
+      },
+      "conditionBlock": {
+        "conditionType": 0,
+        "conditions": [
+          {
+            "variableCode": "STEP",
+            "sign": 2,
+            "value": 5
+          },
+          {
+            "variableCode": "GOLD",
+            "sign": 1,
+            "value": 1
+          },
+          {
+            "conditionType": 1,
+            "conditions": [
+              {
+                "variableCode": "GOLD",
+                "sign": 0,
+                "value": 1
+              },
+              {
+                "variableCode": "STEP",
+                "sign": 0,
+                "value": 5
+              }
+            ]
+          }
+        ]
+      },
+      "answers": []
+    }
+  ]
+}

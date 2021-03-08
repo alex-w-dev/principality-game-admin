@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx';
+const defaultMainConfig = require('./default-main-config.json');
 
 export interface IVariable {
   code: string;
@@ -113,23 +114,7 @@ export class MainConfigStore {
   }
 
   getDefaultConfig(): IMainConfig {
-    return {
-      variables: [
-        {
-          code: "STEP",
-          initial: 0,
-          max: '',
-          min: 0,
-        },
-        {
-          code: "GOLD",
-          initial: 100,
-          max: '',
-          min: 0,
-        },
-      ],
-      events: [],
-    };
+    return JSON.parse(JSON.stringify(defaultMainConfig));
   }
 
   addNewVariable(): void {
