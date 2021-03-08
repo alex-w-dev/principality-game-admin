@@ -9,7 +9,7 @@ export interface IVariable {
   max: number | '';
 }
 
-export enum IConditionSign {
+export enum ConditionSign {
   Equal = 0,
   LessThan = 1,
   GreaterThan = 2,
@@ -17,7 +17,7 @@ export enum IConditionSign {
 
 export interface ICondition {
   variableCode: IVariable['code'];
-  sign: IConditionSign,
+  sign: ConditionSign,
   value: number;
 }
 
@@ -194,12 +194,12 @@ export class MainConfigStore {
         conditions: [
           {
             variableCode: 'STEP',
-            sign: IConditionSign.GreaterThan,
+            sign: ConditionSign.GreaterThan,
             value: 5,
           },
           {
             variableCode: 'GOLD',
-            sign: IConditionSign.LessThan,
+            sign: ConditionSign.LessThan,
             value: 1,
           },
           {
@@ -207,12 +207,12 @@ export class MainConfigStore {
             conditions: [
               {
                 variableCode: 'GOLD',
-                sign: IConditionSign.Equal,
+                sign: ConditionSign.Equal,
                 value: 1,
               },
               {
                 variableCode: 'STEP',
-                sign: IConditionSign.Equal,
+                sign: ConditionSign.Equal,
                 value: 5,
               },
             ]

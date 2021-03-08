@@ -3,7 +3,7 @@ import { EventType } from '../stores/main-config.store';
 export function eventTypeToName(eventType: EventType): string {
   switch (eventType) {
     case EventType.Common:
-      return 'Случайное событие';
+      return 'Сюжетное событие';
     case EventType.Critical:
       return 'Критическое событие';
     case EventType.Random:

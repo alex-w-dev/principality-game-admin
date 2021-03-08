@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 import { useMainConfigStore } from '../../hooks/use-main-config-store';
 import { inject, observer } from 'mobx-react';
 import { eventTypeToName } from '../../utils/event-type-to-name';
+import ConditionBlockEditor from '../ConditionBlockEditor/ConditionBlockEditor';
 
 export default inject()(
   observer(
@@ -46,6 +47,10 @@ export default inject()(
                 value={event.text.en}
                 onChange={ (e) => event.text.en = e.target.value}
               />
+            </label>
+            <label>
+              <div>Условие того, что это событие вызовется:</div>
+              <ConditionBlockEditor conditionBlock={event.conditionBlock} />
             </label>
           </div>
           <div></div>
