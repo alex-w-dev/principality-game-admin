@@ -1,4 +1,5 @@
-import { makeAutoObservable } from 'mobx';
+import { autorun, extendObservable, makeAutoObservable, toJS } from 'mobx';
+
 const defaultMainConfig = require('./default-main-config.json');
 
 export interface IVariable {
@@ -74,18 +75,30 @@ export interface IMainConfig {
   events: IEvent[];
 }
 
+function autoSave(store, save) {
+  let firstRun = true;
+  autorun(() => {
+    // This code will run every time any observable property
+    // on the store is updated.
+    const json = JSON.stringify(toJS(store));
+    if (!firstRun) {
+      save(json);
+    }
+    firstRun = false;
+  });
+}
+
 export class MainConfigStore {
   mainConfig: IMainConfig = this.getDefaultConfig();
 
   constructor() {
-    // this.loadFromLocalStorage();
+    makeAutoObservable(this);
 
-    makeAutoObservable(this)
+    this.loadFromLocalStorage();
+    autoSave(this, this.saveInLocalStorage.bind(this));
   }
 
   export(): void {
-    this.saveInLocalStorage();
-
     const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(
       JSON.stringify(this.mainConfig, null, 2),
     )}`;
@@ -101,7 +114,11 @@ export class MainConfigStore {
     const lsMainConfig = localStorage.getItem("mainGameConfig");
 
     if (lsMainConfig) {
-      this.setMainConfig(JSON.parse(lsMainConfig));
+      const mainConfig = JSON.parse(lsMainConfig);
+
+      this.setMainConfig(mainConfig);
+
+      extendObservable(this, mainConfig);
     }
   }
 
@@ -154,7 +171,6 @@ export class MainConfigStore {
     }
 
     Object.assign(variable, dataToSave);
-    this.saveInLocalStorage();
   }
 
   addNewEvent(eventType: EventType): void {

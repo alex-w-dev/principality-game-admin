@@ -2,14 +2,55 @@ import React from 'react';
 import styles from './EventEditor.module.scss';
 import { useParams } from 'react-router';
 import { useMainConfigStore } from '../../hooks/use-main-config-store';
+import { inject, observer } from 'mobx-react';
+import { eventTypeToName } from '../../utils/event-type-to-name';
 
-export default function EventEditor () {
-  const mainConfigStore = useMainConfigStore();
-  const { index } = useParams() as any;
+export default inject()(
+  observer(
+    function EventEditor () {
+      const mainConfigStore = useMainConfigStore();
+      const { index } = useParams() as any;
 
-  return <div
-    className={styles.eventEditor}
-  >
-    {mainConfigStore.mainConfig.events[parseInt(index)].title.ru}
-  </div>
-}
+      const event = mainConfigStore.mainConfig.events[parseInt(index)];
+
+      return <div>
+        <h2>{eventTypeToName(event.type)} (ID {index}): {event.title.ru} ({event.title.en})</h2>
+        <div
+          className={styles.eventEditor}
+        >
+          <div>
+            <label >
+              <div>Заголовок (РУС)</div>
+              <input
+                value={event.title.ru}
+                onChange={(e) => event.title.ru = e.target.value }
+              />
+            </label>
+            <label >
+              <div>Заголовок (ENG)</div>
+              <input
+                value={event.title.en}
+                onChange={(e) => event.title.en = e.target.value }
+              />
+            </label>
+            <label >
+              <div>Текст (РУС)</div>
+              <textarea
+                value={event.text.ru}
+                onChange={(e) => event.text.ru = e.target.value}
+              />
+            </label>
+            <label >
+              <div>Текст (ENG)</div>
+              <textarea
+                value={event.text.en}
+                onChange={ (e) => event.text.en = e.target.value}
+              />
+            </label>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    }
+  )
+)

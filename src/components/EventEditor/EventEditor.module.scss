@@ -1,3 +1,14 @@
 .eventEditor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
 
+  label {
+    margin-bottom: 15px;
+    display: block;
+
+    & > * {
+      width: 100%;
+    }
+  }
 }
