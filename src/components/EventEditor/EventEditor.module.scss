@@ -1,7 +1,7 @@
 .eventEditor {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 10px;
+  grid-gap: 20px;
 
   label {
     margin-bottom: 15px;
@@ -11,4 +11,10 @@
       width: 100%;
     }
   }
+}
+
+.rewardContainer {
+  margin-top: 30px;
+  border: 1px solid #e2e2e2;
+  padding: 10px;
 }

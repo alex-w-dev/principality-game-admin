@@ -22,14 +22,9 @@ export interface ICondition {
   value: number;
 }
 
-export enum StepRewardOperation {
-  Increase = 1,
-  Decrease = 2,
-}
-
 export interface IStepReward {
-  operation: StepRewardOperation;
   variableCode: IVariable['code'];
+  value: number;
 }
 
 export interface ILocale<T> {
@@ -131,12 +126,16 @@ export class MainConfigStore {
     this.mainConfig = mainConfig;
   }
 
-  setEventData(event: IEvent, path: string, value: any): void {
+  setSomeData(event: any, path: string, value: any): void {
     set(event, path, value);
   }
 
   setConditionData(condition: ICondition, data: Partial<ICondition>): void {
     Object.assign(condition, data);
+  }
+
+  setRewardData(reward: IStepReward, data: Partial<IStepReward>): void {
+    Object.assign(reward, data);
   }
 
   setConditionBlockType(conditionBlock: IConditionBlock, conditionBlockType: ConditionBlockType): void {
@@ -150,12 +149,46 @@ export class MainConfigStore {
     } as IConditionBlock);
   }
 
+  answerAddNewReward(answer: IAnswer): void {
+    answer.rewards.push({
+      variableCode: this.mainConfig.variables[1].code,
+      value: 1,
+    } as IStepReward);
+  }
+
   removeConditionBlock(conditionBlock: IConditionBlock, parentConditionBLock: IConditionBlock): void {
     parentConditionBLock.conditions.splice(parentConditionBLock.conditions.indexOf(conditionBlock), 1);
   }
 
   removeCondition(condition: ICondition, parentConditionBLock: IConditionBlock): void {
     parentConditionBLock.conditions.splice(parentConditionBLock.conditions.indexOf(condition), 1);
+  }
+
+  removeReward(eventAnswer: IAnswer, reward: IStepReward ): void {
+    eventAnswer.rewards.splice(eventAnswer.rewards.indexOf(reward), 1);
+  }
+
+  removeAnswer(event: IEvent, eventAnswer: IAnswer): void {
+    event.answers.splice(event.answers.indexOf(eventAnswer), 1);
+  }
+
+  addAnswer(event: IEvent): void {
+    event.answers.push({
+      conditionBlock: {
+        conditions: [],
+        type: ConditionBlockType.And,
+      },
+      text: {
+        en: 'Do something good',
+        ru: 'Сделать что-нибудь хорошее',
+      },
+      imageUrl: '',
+      voiceUrl: {
+        en: '',
+        ru: '',
+      },
+      rewards: []
+    })
   }
 
   conditionBlockAddCondition(conditionBlock: IConditionBlock): void {

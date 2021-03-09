@@ -30,7 +30,7 @@
         "en": ""
       },
       "conditionBlock": {
-        "type": 2,
+        "conditionType": 1,
         "conditions": [
           {
             "variableCode": "STEP",
@@ -43,7 +43,7 @@
             "value": 1
           },
           {
-            "type": 1,
+            "conditionType": 2,
             "conditions": [
               {
                 "variableCode": "GOLD",
@@ -60,6 +60,111 @@
         ]
       },
       "answers": []
+    },
+    {
+      "imageUrl": "",
+      "title": {
+        "en": "New Event",
+        "ru": "Новое событие"
+      },
+      "text": {
+        "en": "New Event English Description Text",
+        "ru": "Новой событие описанное на русском языке"
+      },
+      "type": 1,
+      "voiceUrl": {
+        "ru": "",
+        "en": ""
+      },
+      "conditionBlock": {
+        "conditionType": 1,
+        "conditions": [
+          {
+            "variableCode": "STEP",
+            "sign": 1,
+            "value": 1
+          },
+          {
+            "variableCode": "GOLD",
+            "sign": 2,
+            "value": 1
+          },
+          {
+            "conditionType": 2,
+            "conditions": [
+              {
+                "variableCode": "STEP",
+                "sign": 1,
+                "value": 1
+              },
+              {
+                "variableCode": "STEP",
+                "sign": 1,
+                "value": 5
+              }
+            ],
+            "type": 2
+          }
+        ],
+        "type": 1
+      },
+      "answers": [
+        {
+          "conditionBlock": {
+            "conditions": [],
+            "type": 1
+          },
+          "text": {
+            "en": "Do something good",
+            "ru": "Сделать что-нибудь хорошее"
+          },
+          "imageUrl": "",
+          "voiceUrl": {
+            "en": "",
+            "ru": ""
+          },
+          "rewards": [
+            {
+              "variableCode": "GOLD",
+              "operation": 1,
+              "value": 10
+            },
+            {
+              "variableCode": "GOLD",
+              "value": -5
+            },
+            {
+              "variableCode": "GOLD",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "conditionBlock": {
+            "conditions": [],
+            "type": 1
+          },
+          "text": {
+            "en": "Do something bad",
+            "ru": "Сделать что-нибудь плохое"
+          },
+          "imageUrl": "",
+          "voiceUrl": {
+            "en": "",
+            "ru": ""
+          },
+          "rewards": [
+            {
+              "variableCode": "GOLD",
+              "value": -3
+            },
+            {
+              "variableCode": "GOLD",
+              "value": 1
+            }
+          ]
+        }
+      ]
     }
   ]
 }
