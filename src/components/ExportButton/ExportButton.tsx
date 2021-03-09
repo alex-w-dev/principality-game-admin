@@ -10,7 +10,7 @@ export default inject()(
       return <button
         onClick={() => mainConfigStore.export()}
       >
-        Export {mainConfigStore.mainConfig.variables.length}
+        Export {mainConfigStore.mainConfig.variables.length} {mainConfigStore.mainConfig.events.length}
       </button>
     }
   )

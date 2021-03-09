@@ -1,6 +1,15 @@
 .conditionBlockEditor {
 
 }
+.conditionBlockEditorBlockStart {
+  display: flex;
+  justify-content: space-between;
+  background-color: #e0e0e0;
+}
 .conditionBlockEditorCondition {
   margin-left: 15px;
+}
+
+.removeConditionsBLockButton {
+  margin-left: 20px;
 }

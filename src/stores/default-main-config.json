@@ -30,7 +30,7 @@
         "en": ""
       },
       "conditionBlock": {
-        "conditionType": 0,
+        "type": 2,
         "conditions": [
           {
             "variableCode": "STEP",
@@ -43,16 +43,16 @@
             "value": 1
           },
           {
-            "conditionType": 1,
+            "type": 1,
             "conditions": [
               {
                 "variableCode": "GOLD",
-                "sign": 0,
+                "sign": 1,
                 "value": 1
               },
               {
                 "variableCode": "STEP",
-                "sign": 0,
+                "sign": 1,
                 "value": 5
               }
             ]

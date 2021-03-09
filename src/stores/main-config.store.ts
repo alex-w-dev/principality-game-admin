@@ -11,9 +11,9 @@ export interface IVariable {
 }
 
 export enum ConditionSign {
-  Equal = 0,
-  LessThan = 1,
-  GreaterThan = 2,
+  Equal = 1,
+  LessThan = 2,
+  GreaterThan = 3,
 }
 
 export interface ICondition {
@@ -23,8 +23,8 @@ export interface ICondition {
 }
 
 export enum StepRewardOperation {
-  Increase = 0,
-  Decrease = 1,
+  Increase = 1,
+  Decrease = 2,
 }
 
 export interface IStepReward {
@@ -46,19 +46,19 @@ export interface IAnswer {
 }
 
 export enum ConditionBlockType {
-  And = 0,
-  Or = 1,
+  And = 1,
+  Or = 2,
 }
 
 export interface IConditionBlock {
-  conditionType: ConditionBlockType;
+  type: ConditionBlockType;
   conditions: (ICondition | IConditionBlock)[];
 }
 
 export enum EventType {
-  Critical = 0,
   Common = 1,
   Random = 2,
+  Critical = 3,
 }
 
 export interface IEvent {
@@ -139,6 +139,33 @@ export class MainConfigStore {
     Object.assign(condition, data);
   }
 
+  setConditionBlockType(conditionBlock: IConditionBlock, conditionBlockType: ConditionBlockType): void {
+    conditionBlock.type = conditionBlockType;
+  }
+
+  conditionBlockAddConditionBlock(conditionBlock: IConditionBlock): void {
+    conditionBlock.conditions.push({
+      conditions: [],
+      type: ConditionBlockType.And,
+    } as IConditionBlock);
+  }
+
+  removeConditionBlock(conditionBlock: IConditionBlock, parentConditionBLock: IConditionBlock): void {
+    parentConditionBLock.conditions.splice(parentConditionBLock.conditions.indexOf(conditionBlock), 1);
+  }
+
+  removeCondition(condition: ICondition, parentConditionBLock: IConditionBlock): void {
+    parentConditionBLock.conditions.splice(parentConditionBLock.conditions.indexOf(condition), 1);
+  }
+
+  conditionBlockAddCondition(conditionBlock: IConditionBlock): void {
+    conditionBlock.conditions.push({
+      variableCode: this.mainConfig.variables[0].code,
+      sign: ConditionSign.Equal,
+      value: 0,
+    } as ICondition);
+  }
+
   getDefaultConfig(): IMainConfig {
     return JSON.parse(JSON.stringify(defaultMainConfig));
   }
@@ -199,7 +226,7 @@ export class MainConfigStore {
         en: ''
       },
       conditionBlock: {
-        conditionType: ConditionBlockType.And,
+        type: ConditionBlockType.And,
         conditions: [
           {
             variableCode: 'STEP',
@@ -212,7 +239,7 @@ export class MainConfigStore {
             value: 1,
           },
           {
-            conditionType: ConditionBlockType.Or,
+            type: ConditionBlockType.Or,
             conditions: [
               {
                 variableCode: 'GOLD',
