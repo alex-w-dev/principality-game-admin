@@ -1,4 +1,5 @@
 import { autorun, extendObservable, makeAutoObservable, toJS } from 'mobx';
+import { set } from 'lodash';
 
 const defaultMainConfig = require('./default-main-config.json');
 
@@ -128,6 +129,14 @@ export class MainConfigStore {
 
   setMainConfig(mainConfig: IMainConfig): void {
     this.mainConfig = mainConfig;
+  }
+
+  setEventData(event: IEvent, path: string, value: any): void {
+    set(event, path, value);
+  }
+
+  setConditionData(condition: ICondition, data: Partial<ICondition>): void {
+    Object.assign(condition, data);
   }
 
   getDefaultConfig(): IMainConfig {

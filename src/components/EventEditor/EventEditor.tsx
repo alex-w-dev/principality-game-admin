@@ -24,28 +24,28 @@ export default inject()(
               <div>Заголовок (РУС)</div>
               <input
                 value={event.title.ru}
-                onChange={(e) => event.title.ru = e.target.value }
+                onChange={(e) => mainConfigStore.setEventData(event, 'title.ru', e.target.value) }
               />
             </label>
             <label >
               <div>Заголовок (ENG)</div>
               <input
                 value={event.title.en}
-                onChange={(e) => event.title.en = e.target.value }
+                onChange={(e) => mainConfigStore.setEventData(event, 'title.en', e.target.value) }
               />
             </label>
             <label >
               <div>Текст (РУС)</div>
               <textarea
                 value={event.text.ru}
-                onChange={(e) => event.text.ru = e.target.value}
+                onChange={(e) => mainConfigStore.setEventData(event, 'text.ru', e.target.value) }
               />
             </label>
             <label >
               <div>Текст (ENG)</div>
               <textarea
                 value={event.text.en}
-                onChange={ (e) => event.text.en = e.target.value}
+                onChange={ (e) => mainConfigStore.setEventData(event, 'text.en', e.target.value) }
               />
             </label>
             <label>
