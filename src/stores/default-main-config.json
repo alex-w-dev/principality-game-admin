@@ -11,6 +11,12 @@
       "initial": 100,
       "max": "",
       "min": 0
+    },
+    {
+      "code": "NEW_VAR",
+      "initial": 0,
+      "max": "",
+      "min": ""
     }
   ],
   "events": [
@@ -131,7 +137,7 @@
             },
             {
               "variableCode": "GOLD",
-              "value": -5
+              "value": -9
             },
             {
               "variableCode": "GOLD",
@@ -163,8 +169,80 @@
               "value": 1
             }
           ]
+        },
+        {
+          "conditionBlock": {
+            "conditions": [],
+            "type": 1
+          },
+          "text": {
+            "en": "Do something good",
+            "ru": "Сделать что-нибудь хорошее"
+          },
+          "imageUrl": "",
+          "voiceUrl": {
+            "en": "",
+            "ru": ""
+          },
+          "rewards": []
         }
       ]
+    },
+    {
+      "imageUrl": "",
+      "title": {
+        "en": "Gold ended",
+        "ru": "Закончилось золото"
+      },
+      "text": {
+        "en": "(ENG)У вас в казне совершенно не осталось ни одной монетки",
+        "ru": "У вас в казне совершенно не осталось ни одной монетки"
+      },
+      "type": 3,
+      "voiceUrl": {
+        "ru": "",
+        "en": ""
+      },
+      "conditionBlock": {
+        "type": 1,
+        "conditions": [
+          {
+            "variableCode": "GOLD",
+            "sign": 2,
+            "value": 0
+          }
+        ]
+      },
+      "answers": [],
+      "gameOver": -1
+    },
+    {
+      "imageUrl": "",
+      "title": {
+        "en": "No more steps for You",
+        "ru": "Ходов больше не осталось"
+      },
+      "text": {
+        "en": "(ENG) Похоже нам больше нечем вас удивить... ждите продолжения игры!",
+        "ru": "Похоже нам больше нечем вас удивить... ждите продолжения игры!"
+      },
+      "type": 3,
+      "voiceUrl": {
+        "ru": "",
+        "en": ""
+      },
+      "conditionBlock": {
+        "type": 1,
+        "conditions": [
+          {
+            "variableCode": "STEP",
+            "sign": 3,
+            "value": 50
+          }
+        ]
+      },
+      "answers": [],
+      "gameOver": 1
     }
   ]
 }

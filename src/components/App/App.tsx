@@ -2,7 +2,7 @@ import React from "react";
 import { hot } from "react-hot-loader";
 // const reactLogo = require("./../assets/img/react_logo.svg");
 import VariablesEditor from "../../pages/VariablesEditor/VariablesEditor";
-import EventsEditor from '../../pages/EventsEditor/EventsEditor';
+import EventsEditor from '../../pages/EventsList/EventsList';
 import { BrowserRouter as Router, Route, Link, useLocation } from "react-router-dom";
 import GameTesting from '../../pages/GameTesting/GameTesting';
 import styles from './App.module.scss'

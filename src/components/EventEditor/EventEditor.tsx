@@ -5,8 +5,46 @@ import { useMainConfigStore } from '../../hooks/use-main-config-store';
 import { inject, observer } from 'mobx-react';
 import { eventTypeToName } from '../../utils/event-type-to-name';
 import ConditionBlockEditor from '../ConditionBlockEditor/ConditionBlockEditor';
-import RewardEditor from '../RewardEditor/RewardEditor';
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
+import { EventType, GameOverType, IEvent, MainConfigStore } from '../../stores/main-config.store';
+
+function renderVariants(mainConfigStore: MainConfigStore, event: IEvent) {
+  return <>
+    <h4>Вырианты ответов:</h4>
+    <hr/>
+    <button
+      onClick={() => mainConfigStore.addAnswer(event)}
+    >
+      Добавить вариант ответа
+    </button>
+
+    { event.answers.map((eventAnswer, index) => {
+      return <div
+        className={styles.rewardContainer}
+        key={index}
+      >
+        <AnswerEditor
+          answer={eventAnswer}
+          event={event}
+        />
+      </div>
+    }) }
+  </>
+}
+
+function renderCriticalEnd(mainConfigStore: MainConfigStore, event: IEvent) {
+  return <>
+    <h4>Исход игры:</h4>
+    <hr/>
+    <select
+      value={event.gameOver}
+      onChange={(e) => mainConfigStore.setSomeData(event, 'gameOver', +e.target.value)}
+    >
+      <option value={GameOverType.Win}>Победа</option>
+      <option value={GameOverType.Defeat}>Поражение</option>
+    </select>
+  </>
+}
 
 export default inject()(
   observer(
@@ -58,25 +96,11 @@ export default inject()(
             </label>
           </div>
           <div>
-            <h4>Вырианты ответов:</h4>
-            <hr/>
-            <button
-              onClick={() => mainConfigStore.addAnswer(event)}
-            >
-              Добавить вариант ответа
-            </button>
-
-            { event.answers.map((eventAnswer, index) => {
-              return <div
-                className={styles.rewardContainer}
-                key={index}
-              >
-                <AnswerEditor
-                  answer={eventAnswer}
-                  event={event}
-                />
-              </div>
-            }) }
+            {
+              (event.type === EventType.Critical)
+                ? renderCriticalEnd(mainConfigStore, event)
+                : renderVariants(mainConfigStore, event)
+            }
           </div>
         </div>
       </div>

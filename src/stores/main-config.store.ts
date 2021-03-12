@@ -56,6 +56,11 @@ export enum EventType {
   Critical = 3,
 }
 
+export enum GameOverType {
+  Win = 1,
+  Defeat = -1,
+}
+
 export interface IEvent {
   type: EventType;
   conditionBlock: IConditionBlock;
@@ -63,7 +68,8 @@ export interface IEvent {
   text: ILocale<string>;
   voiceUrl: ILocale<string>;
   imageUrl: string;
-  answers: IAnswer[]
+  answers: IAnswer[];
+  gameOver?: GameOverType;
 }
 
 export interface IMainConfig {
@@ -243,7 +249,7 @@ export class MainConfigStore {
   }
 
   addNewEvent(eventType: EventType): void {
-    this.mainConfig.events.push({
+    const newEvent: IEvent = {
       imageUrl: '',
       title: {
         en: 'New Event',
@@ -289,7 +295,13 @@ export class MainConfigStore {
         ],
       },
       answers: [],
-    })
+    };
+
+    if (eventType === EventType.Critical) {
+      newEvent.gameOver = GameOverType.Win;
+    }
+
+    this.mainConfig.events.push(newEvent);
   }
 
   private isVariableInUse(variable: IVariable): boolean {

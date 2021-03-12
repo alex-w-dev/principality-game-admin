@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './EventsEditor.module.scss';
+import styles from './EventsList.module.scss';
 import { inject, observer } from 'mobx-react';
 import { useMainConfigStore } from '../../hooks/use-main-config-store';
 import { EventType } from '../../stores/main-config.store';
@@ -30,7 +30,7 @@ export default inject()(
                 <Link
                   to={`${routerMatch.url}/${mainConfigStore.mainConfig.events.indexOf(e)}`}
                 >
-                  {index}. {e.title.ru}
+                  {mainConfigStore.mainConfig.events.indexOf(e)}. {e.title.ru}
                 </Link>
               </div>
             })
