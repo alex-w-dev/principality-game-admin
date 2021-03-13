@@ -38,7 +38,8 @@ export interface IAnswer {
   resultText: ILocale<string>;
   voiceUrl: ILocale<string>;
   imageUrl: string;
-  rewards: IStepReward[]
+  rewards: IStepReward[];
+  gameOver?: GameOverType;
 }
 
 export enum ConditionBlockType {
@@ -70,7 +71,6 @@ export interface IEvent {
   voiceUrl: ILocale<string>;
   imageUrl: string;
   answers: IAnswer[];
-  gameOver?: GameOverType;
 }
 
 export interface IMainConfig {
@@ -273,38 +273,14 @@ export class MainConfigStore {
         type: ConditionBlockType.And,
         conditions: [
           {
-            variableCode: 'STEP',
-            sign: ConditionSign.GreaterThan,
-            value: 5,
-          },
-          {
             variableCode: 'GOLD',
             sign: ConditionSign.LessThan,
             value: 1,
           },
-          {
-            type: ConditionBlockType.Or,
-            conditions: [
-              {
-                variableCode: 'GOLD',
-                sign: ConditionSign.Equal,
-                value: 1,
-              },
-              {
-                variableCode: 'STEP',
-                sign: ConditionSign.Equal,
-                value: 5,
-              },
-            ]
-          }
         ],
       },
       answers: [],
     };
-
-    if (eventType === EventType.Critical) {
-      newEvent.gameOver = GameOverType.Win;
-    }
 
     this.mainConfig.events.push(newEvent);
   }

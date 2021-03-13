@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './AnswerEditor.module.scss';
 import { inject, observer } from 'mobx-react';
-import { IAnswer, IEvent, IStepReward } from '../../stores/main-config.store';
+import { GameOverType, IAnswer, IEvent, IStepReward } from '../../stores/main-config.store';
 import { useMainConfigStore } from '../../hooks/use-main-config-store';
 import ConditionBlockEditor from '../ConditionBlockEditor/ConditionBlockEditor';
 import RewardEditor from '../RewardEditor/RewardEditor';
@@ -58,9 +58,20 @@ export default inject()(
             onChange={ (e) => mainConfigStore.setSomeData(props.answer, 'resultText.en', e.target.value) }
           />
         </label>
+        <label >
+          Закончить игру?
+          <select
+            value={props.answer.gameOver}
+            onChange={(e) => mainConfigStore.setSomeData(props.answer, 'gameOver', +e.target.value || undefined)}
+          >
+            <option>Игра продолжается</option>
+            <option value={GameOverType.Win}>Победа</option>
+            <option value={GameOverType.Defeat}>Поражение</option>
+          </select>
+        </label>
         <div>
           <div>
-            <span>Вгознограждения для этого варианта:</span>
+            <span>Вгознаграждения для этого варианта:</span>
           </div>
           { props.answer.rewards.map((reward, index ) => {
             return <div

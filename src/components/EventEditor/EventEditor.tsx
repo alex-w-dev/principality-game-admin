@@ -6,11 +6,11 @@ import { inject, observer } from 'mobx-react';
 import { eventTypeToName } from '../../utils/event-type-to-name';
 import ConditionBlockEditor from '../ConditionBlockEditor/ConditionBlockEditor';
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
-import { EventType, GameOverType, IEvent, MainConfigStore } from '../../stores/main-config.store';
+import { IEvent, MainConfigStore } from '../../stores/main-config.store';
 
 function renderVariants(mainConfigStore: MainConfigStore, event: IEvent) {
   return <>
-    <h4>Вырианты ответов:</h4>
+    <h4>Варианты ответов:</h4>
     <hr/>
     <button
       onClick={() => mainConfigStore.addAnswer(event)}
@@ -29,20 +29,6 @@ function renderVariants(mainConfigStore: MainConfigStore, event: IEvent) {
         />
       </div>
     }) }
-  </>
-}
-
-function renderCriticalEnd(mainConfigStore: MainConfigStore, event: IEvent) {
-  return <>
-    <h4>Исход игры:</h4>
-    <hr/>
-    <select
-      value={event.gameOver}
-      onChange={(e) => mainConfigStore.setSomeData(event, 'gameOver', +e.target.value)}
-    >
-      <option value={GameOverType.Win}>Победа</option>
-      <option value={GameOverType.Defeat}>Поражение</option>
-    </select>
   </>
 }
 
@@ -97,9 +83,7 @@ export default inject()(
           </div>
           <div>
             {
-              (event.type === EventType.Critical)
-                ? renderCriticalEnd(mainConfigStore, event)
-                : renderVariants(mainConfigStore, event)
+              renderVariants(mainConfigStore, event)
             }
           </div>
         </div>

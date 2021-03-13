@@ -225,8 +225,7 @@
           }
         ]
       },
-      "answers": [],
-      "gameOver": -1
+      "answers": []
     },
     {
       "imageUrl": "",
@@ -253,8 +252,7 @@
           }
         ]
       },
-      "answers": [],
-      "gameOver": 1
+      "answers": []
     }
   ]
 }
