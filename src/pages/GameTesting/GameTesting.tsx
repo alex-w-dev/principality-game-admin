@@ -7,7 +7,7 @@ export default class GameTesting extends React.Component<any, any> {
     return <div
       className={styles.variablesEditor}
     >
-      jjjjjjjjjjjjjjj jjjjjjjjjjjjjjjjj
+      <button onClick={() => alert('Булки готовы!')}>Старт</button>
     </div>;
   }
 }
