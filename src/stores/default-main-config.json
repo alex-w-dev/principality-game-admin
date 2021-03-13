@@ -120,9 +120,13 @@
             "conditions": [],
             "type": 1
           },
-          "text": {
+          "choiceText": {
             "en": "Do something good",
             "ru": "Сделать что-нибудь хорошее"
+          },
+          "resultText": {
+            "en": "good",
+            "ru": "хорошее"
           },
           "imageUrl": "",
           "voiceUrl": {
@@ -150,9 +154,13 @@
             "conditions": [],
             "type": 1
           },
-          "text": {
-            "en": "Do something bad",
-            "ru": "Сделать что-нибудь плохое"
+          "choiceText": {
+            "en": "Do something good",
+            "ru": "Сделать что-нибудь хорошее"
+          },
+          "resultText": {
+            "en": "good",
+            "ru": "хорошее"
           },
           "imageUrl": "",
           "voiceUrl": {
@@ -175,9 +183,13 @@
             "conditions": [],
             "type": 1
           },
-          "text": {
+          "choiceText": {
             "en": "Do something good",
             "ru": "Сделать что-нибудь хорошее"
+          },
+          "resultText": {
+            "en": "good",
+            "ru": "хорошее"
           },
           "imageUrl": "",
           "voiceUrl": {

@@ -34,7 +34,8 @@ export interface ILocale<T> {
 
 export interface IAnswer {
   conditionBlock: IConditionBlock;
-  text: ILocale<string>;
+  choiceText: ILocale<string>;
+  resultText: ILocale<string>;
   voiceUrl: ILocale<string>;
   imageUrl: string;
   rewards: IStepReward[]
@@ -184,9 +185,13 @@ export class MainConfigStore {
         conditions: [],
         type: ConditionBlockType.And,
       },
-      text: {
+      choiceText: {
         en: 'Do something good',
         ru: 'Сделать что-нибудь хорошее',
+      },
+      resultText: {
+        en: 'You right',
+        ru: 'Это было верное решение',
       },
       imageUrl: '',
       voiceUrl: {

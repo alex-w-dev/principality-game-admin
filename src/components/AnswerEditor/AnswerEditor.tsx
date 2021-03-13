@@ -29,20 +29,34 @@ export default inject()(
         <label >
           <div>Текст (РУС)</div>
           <textarea
-            value={props.answer.text.ru}
-            onChange={(e) => mainConfigStore.setSomeData(props.answer, 'text.ru', e.target.value) }
+            value={props.answer.choiceText.ru}
+            onChange={(e) => mainConfigStore.setSomeData(props.answer, 'choiceText.ru', e.target.value) }
           />
         </label>
         <label >
           <div>Текст (ENG)</div>
           <textarea
-            value={props.answer.text.en}
-            onChange={ (e) => mainConfigStore.setSomeData(props.answer, 'text.en', e.target.value) }
+            value={props.answer.choiceText.en}
+            onChange={ (e) => mainConfigStore.setSomeData(props.answer, 'choiceText.en', e.target.value) }
           />
         </label>
         <label>
           <div>Условие того, что этот вариант ответа будет доступен (без условий доступен всегда):</div>
           <ConditionBlockEditor conditionBlock={props.answer.conditionBlock} />
+        </label>
+        <label >
+          <div>Исход (РУС)</div>
+          <textarea
+            value={props.answer.resultText.ru}
+            onChange={(e) => mainConfigStore.setSomeData(props.answer, 'resultText.ru', e.target.value) }
+          />
+        </label>
+        <label >
+          <div>Исход (ENG)</div>
+          <textarea
+            value={props.answer.resultText.en}
+            onChange={ (e) => mainConfigStore.setSomeData(props.answer, 'resultText.en', e.target.value) }
+          />
         </label>
         <div>
           <div>
