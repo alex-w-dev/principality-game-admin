@@ -2,7 +2,7 @@
   "variables": [
     {
       "code": "STEP",
-      "initial": 0,
+      "initial": 1,
       "max": "",
       "min": 0
     },
