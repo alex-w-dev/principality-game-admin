@@ -63,8 +63,8 @@ export enum GameOverType {
   Defeat = -1,
 }
 
-export interface IEvent {
-  type: EventType;
+export interface IEvent<T = EventType> {
+  type: T;
   conditionBlock: IConditionBlock;
   title: ILocale<string>;
   text: ILocale<string>;
