@@ -7,6 +7,12 @@
   & > * {
     overflow-y: auto;
   }
+
+  b {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: block;
+  }
 }
 
 .variables {
@@ -16,7 +22,7 @@
   padding: 10px;
   border: 1px solid #f1f1f1;
   cursor: pointer;
-  margin-bottom: 15px;
+  margin-bottom: 5px;
 
   &:hover {
     background-color: #f1f1f1;
