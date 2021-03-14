@@ -58,6 +58,7 @@ export class Game {
   }
 
   getCurrentEvent(): IEvent {
+    console.log(this.commonEvents, 'this.commonEvents.length');
     const commonEvent = this.commonEvents.filter(this.eventConditionFilter)?.[0];
 
     if (commonEvent) {

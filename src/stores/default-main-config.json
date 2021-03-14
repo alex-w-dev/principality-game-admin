@@ -7,28 +7,34 @@
       "min": 0
     },
     {
-      "code": "GOLD",
+      "code": "TREASURY",
       "initial": 100,
       "max": "",
       "min": 0
     },
     {
-      "code": "NEW_VAR",
+      "code": "BOYAR_RELATIONSHIP",
       "initial": 0,
-      "max": "",
-      "min": ""
+      "max": 5,
+      "min": -5
+    },
+    {
+      "code": "SMERD_RELATIONSHIP",
+      "initial": 0,
+      "max": 5,
+      "min": -5
     }
   ],
   "events": [
     {
       "imageUrl": "",
       "title": {
-        "en": "New Event",
-        "ru": "Новое событие"
+        "en": "",
+        "ru": "Первый ход: Умер великий князь Мирон"
       },
       "text": {
-        "en": "New Event English Description Text",
-        "ru": "Новой событие описанное на русском языке"
+        "en": "(ENG) Умер великий князь Мирон, теперь власть перешла к молодому князю Михаилу.\nКак принять бразды правления?\n",
+        "ru": "Умер великий князь Мирон, теперь власть перешла к молодому князю Михаилу.\nКак принять бразды правления?\n"
       },
       "type": 1,
       "voiceUrl": {
@@ -40,79 +46,10 @@
         "conditions": [
           {
             "variableCode": "STEP",
-            "sign": 2,
-            "value": 5
-          },
-          {
-            "variableCode": "GOLD",
             "sign": 1,
             "value": 1
-          },
-          {
-            "conditionType": 2,
-            "conditions": [
-              {
-                "variableCode": "GOLD",
-                "sign": 1,
-                "value": 1
-              },
-              {
-                "variableCode": "STEP",
-                "sign": 1,
-                "value": 5
-              }
-            ]
           }
         ]
-      },
-      "answers": []
-    },
-    {
-      "imageUrl": "",
-      "title": {
-        "en": "New Event",
-        "ru": "Новое событие"
-      },
-      "text": {
-        "en": "New Event English Description Text",
-        "ru": "Новой событие описанное на русском языке"
-      },
-      "type": 1,
-      "voiceUrl": {
-        "ru": "",
-        "en": ""
-      },
-      "conditionBlock": {
-        "conditionType": 1,
-        "conditions": [
-          {
-            "variableCode": "STEP",
-            "sign": 1,
-            "value": 1
-          },
-          {
-            "variableCode": "GOLD",
-            "sign": 2,
-            "value": 1
-          },
-          {
-            "conditionType": 2,
-            "conditions": [
-              {
-                "variableCode": "STEP",
-                "sign": 1,
-                "value": 1
-              },
-              {
-                "variableCode": "STEP",
-                "sign": 1,
-                "value": 5
-              }
-            ],
-            "type": 2
-          }
-        ],
-        "type": 1
       },
       "answers": [
         {
@@ -121,12 +58,32 @@
             "type": 1
           },
           "choiceText": {
-            "en": "Do something good",
-            "ru": "Сделать что-нибудь хорошее"
+            "en": "ENG Тихой и спокойно церемонией, не поднимая лишнего шума.",
+            "ru": "Тихой и спокойно церемонией, не поднимая лишнего шума."
           },
           "resultText": {
-            "en": "good",
-            "ru": "хорошее"
+            "en": "ENG никаких изменений",
+            "ru": "никаких изменений"
+          },
+          "imageUrl": "",
+          "voiceUrl": {
+            "en": "",
+            "ru": ""
+          },
+          "rewards": []
+        },
+        {
+          "conditionBlock": {
+            "conditions": [],
+            "type": 1
+          },
+          "choiceText": {
+            "en": "ENG Шумным праздником.",
+            "ru": "Шумным праздником."
+          },
+          "resultText": {
+            "en": "ENG отношения с боярами +1, казна -2",
+            "ru": "отношения с боярами +1, казна -2"
           },
           "imageUrl": "",
           "voiceUrl": {
@@ -135,17 +92,12 @@
           },
           "rewards": [
             {
-              "variableCode": "GOLD",
-              "operation": 1,
-              "value": 10
-            },
-            {
-              "variableCode": "GOLD",
-              "value": -9
-            },
-            {
-              "variableCode": "GOLD",
+              "variableCode": "BOYAR_RELATIONSHIP",
               "value": 1
+            },
+            {
+              "variableCode": "TREASURY",
+              "value": -2
             }
           ]
         },
@@ -155,41 +107,12 @@
             "type": 1
           },
           "choiceText": {
-            "en": "Do something good",
-            "ru": "Сделать что-нибудь хорошее"
+            "en": "ENG Небольшой церемонией и обещанием больших перемен",
+            "ru": "Небольшой церемонией и обещанием больших перемен"
           },
           "resultText": {
-            "en": "good",
-            "ru": "хорошее"
-          },
-          "imageUrl": "",
-          "voiceUrl": {
-            "en": "",
-            "ru": ""
-          },
-          "rewards": [
-            {
-              "variableCode": "GOLD",
-              "value": -3
-            },
-            {
-              "variableCode": "GOLD",
-              "value": 1
-            }
-          ]
-        },
-        {
-          "conditionBlock": {
-            "conditions": [],
-            "type": 1
-          },
-          "choiceText": {
-            "en": "Do something good",
-            "ru": "Сделать что-нибудь хорошее"
-          },
-          "resultText": {
-            "en": "good",
-            "ru": "хорошее"
+            "en": "ENG никаких изменений",
+            "ru": "никаких изменений"
           },
           "imageUrl": "",
           "voiceUrl": {
@@ -203,12 +126,169 @@
     {
       "imageUrl": "",
       "title": {
+        "en": "",
+        "ru": "Второй ход"
+      },
+      "text": {
+        "en": "ENG На аудиенцию попросился некий смерд Игнат. Он говорит, что при великом князе Мироне дань с полей все считали вполне приемлемой платой. Сейчас некоторые бояре самовольно подняли плату, тем не менее и в казне больше денег поступать не стало. как поступить?",
+        "ru": "На аудиенцию попросился некий смерд Игнат. Он говорит, что при великом князе Мироне дань с полей все считали вполне приемлемой платой. Сейчас некоторые бояре самовольно подняли плату, тем не менее и в казне больше денег поступать не стало. как поступить?"
+      },
+      "type": 1,
+      "voiceUrl": {
+        "ru": "",
+        "en": ""
+      },
+      "conditionBlock": {
+        "conditionType": 1,
+        "conditions": [
+          {
+            "variableCode": "STEP",
+            "sign": 1,
+            "value": 2
+          }
+        ],
+        "type": 1
+      },
+      "answers": [
+        {
+          "conditionBlock": {
+            "conditions": [],
+            "type": 1
+          },
+          "choiceText": {
+            "en": "ENG Согласовать повышение дани и похвалить бояр за такой поступок, Игната казнить ",
+            "ru": "Согласовать повышение дани и похвалить бояр за такой поступок, Игната казнить "
+          },
+          "resultText": {
+            "en": "ENG отношения с боярами +2, казна +10, отношения со смердами - 3",
+            "ru": "отношения с боярами +2, казна +10, отношения со смердами - 3"
+          },
+          "imageUrl": "",
+          "voiceUrl": {
+            "en": "",
+            "ru": ""
+          },
+          "rewards": [
+            {
+              "variableCode": "BOYAR_RELATIONSHIP",
+              "value": 2
+            },
+            {
+              "variableCode": "TREASURY",
+              "value": 10
+            },
+            {
+              "variableCode": "BOYAR_RELATIONSHIP",
+              "value": -3
+            }
+          ]
+        },
+        {
+          "conditionBlock": {
+            "conditions": [],
+            "type": 1
+          },
+          "choiceText": {
+            "en": "ENG Согласовать повышение дани, оштрафовать бояр, что присваивали имущество себе, Игната казнить",
+            "ru": "Согласовать повышение дани, оштрафовать бояр, что присваивали имущество себе, Игната казнить"
+          },
+          "resultText": {
+            "en": "(отношения с боярами -1, казна +15, отношения со смердами -3)\n",
+            "ru": "(отношения с боярами -1, казна +15, отношения со смердами -3)\n"
+          },
+          "imageUrl": "",
+          "voiceUrl": {
+            "en": "",
+            "ru": ""
+          },
+          "rewards": [
+            {
+              "variableCode": "TREASURY",
+              "value": 15
+            },
+            {
+              "variableCode": "BOYAR_RELATIONSHIP",
+              "value": -1
+            },
+            {
+              "variableCode": "SMERD_RELATIONSHIP",
+              "value": -3
+            }
+          ]
+        },
+        {
+          "conditionBlock": {
+            "conditions": [],
+            "type": 1
+          },
+          "choiceText": {
+            "en": "ENG Забрать золото у бояр в казну, вернуть уровень дани на прежний уровень, Игната отпустить.",
+            "ru": "Забрать золото у бояр в казну, вернуть уровень дани на прежний уровень, Игната отпустить."
+          },
+          "resultText": {
+            "en": "(отношения с боярами -1, казна +5, отношения со смердами -2)\n",
+            "ru": "(отношения с боярами -1, казна +5, отношения со смердами -2)\n"
+          },
+          "imageUrl": "",
+          "voiceUrl": {
+            "en": "",
+            "ru": ""
+          },
+          "rewards": [
+            {
+              "variableCode": "BOYAR_RELATIONSHIP",
+              "value": -1
+            },
+            {
+              "variableCode": "TREASURY",
+              "value": 5
+            },
+            {
+              "variableCode": "SMERD_RELATIONSHIP",
+              "value": -2
+            }
+          ]
+        },
+        {
+          "conditionBlock": {
+            "conditions": [],
+            "type": 1
+          },
+          "choiceText": {
+            "en": "ENG Забрать золото у бояр и вернуть смердами. Игната отпустить.",
+            "ru": "Забрать золото у бояр и вернуть смердами. Игната отпустить."
+          },
+          "resultText": {
+            "en": "ENG (отношения с боярами -1, отношения со смердами +2)",
+            "ru": "(отношения с боярами -1, отношения со смердами +2)"
+          },
+          "imageUrl": "",
+          "voiceUrl": {
+            "en": "",
+            "ru": ""
+          },
+          "rewards": [
+            {
+              "variableCode": "BOYAR_RELATIONSHIP",
+              "value": -1
+            },
+            {
+              "variableCode": "SMERD_RELATIONSHIP",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "imageUrl": "",
+      "title": {
         "en": "Gold ended",
         "ru": "Закончилось золото"
       },
       "text": {
-        "en": "(ENG)У вас в казне совершенно не осталось ни одной монетки",
-        "ru": "У вас в казне совершенно не осталось ни одной монетки"
+        "en": "(ENG)У вас в казне совершенно не осталось ни одной монетки q q<ada>",
+        "ru": "У вас в казне совершенно не осталось ни одной монеткиdq fqw rfqw rqwr wqr qwr qwr qwr qwr wqqwdd"
       },
       "type": 3,
       "voiceUrl": {
@@ -217,15 +297,31 @@
       },
       "conditionBlock": {
         "type": 1,
-        "conditions": [
-          {
-            "variableCode": "GOLD",
-            "sign": 2,
-            "value": 0
-          }
-        ]
+        "conditions": []
       },
-      "answers": []
+      "answers": [
+        {
+          "conditionBlock": {
+            "conditions": [],
+            "type": 1
+          },
+          "choiceText": {
+            "en": "Do something good",
+            "ru": "Сделать что-нибудь хорошее"
+          },
+          "resultText": {
+            "en": "You right",
+            "ru": "Это было верное решение"
+          },
+          "imageUrl": "",
+          "voiceUrl": {
+            "en": "",
+            "ru": ""
+          },
+          "rewards": []
+        }
+      ],
+      "gameOver": -1
     },
     {
       "imageUrl": "",
@@ -252,7 +348,77 @@
           }
         ]
       },
-      "answers": []
+      "answers": [
+        {
+          "conditionBlock": {
+            "conditions": [],
+            "type": 1
+          },
+          "choiceText": {
+            "en": "Do something good",
+            "ru": "Сделать что-нибудь хорошее"
+          },
+          "resultText": {
+            "en": "You right",
+            "ru": "Это было верное решение"
+          },
+          "imageUrl": "",
+          "voiceUrl": {
+            "en": "",
+            "ru": ""
+          },
+          "rewards": []
+        }
+      ],
+      "gameOver": 1
+    },
+    {
+      "imageUrl": "",
+      "title": {
+        "en": "New Event",
+        "ru": "Новое событие"
+      },
+      "text": {
+        "en": "New Event English Description Text",
+        "ru": "Новой событие описанное на русском языке"
+      },
+      "type": 2,
+      "voiceUrl": {
+        "ru": "",
+        "en": ""
+      },
+      "conditionBlock": {
+        "type": 1,
+        "conditions": [
+          {
+            "variableCode": "STEP",
+            "sign": 2,
+            "value": 20
+          }
+        ]
+      },
+      "answers": [
+        {
+          "conditionBlock": {
+            "conditions": [],
+            "type": 1
+          },
+          "choiceText": {
+            "en": "Do something good",
+            "ru": "Сделать что-нибудь хорошее"
+          },
+          "resultText": {
+            "en": "You right",
+            "ru": "Это было верное решение"
+          },
+          "imageUrl": "",
+          "voiceUrl": {
+            "en": "",
+            "ru": ""
+          },
+          "rewards": []
+        }
+      ]
     }
   ]
 }

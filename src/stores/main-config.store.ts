@@ -176,6 +176,10 @@ export class MainConfigStore {
   }
 
   removeAnswer(event: IEvent, eventAnswer: IAnswer): void {
+    if (event.answers.length === 1) {
+      return alert('Нельзя удалить последний ответ, в событии всегда должен быть хоть 1 исход');
+    }
+
     event.answers.splice(event.answers.indexOf(eventAnswer), 1);
   }
 
@@ -186,11 +190,11 @@ export class MainConfigStore {
         type: ConditionBlockType.And,
       },
       choiceText: {
-        en: 'Do something good',
+        en: 'ENG Do something good',
         ru: 'Сделать что-нибудь хорошее',
       },
       resultText: {
-        en: 'You right',
+        en: 'ENG You right',
         ru: 'Это было верное решение',
       },
       imageUrl: '',
@@ -257,11 +261,11 @@ export class MainConfigStore {
     const newEvent: IEvent = {
       imageUrl: '',
       title: {
-        en: 'New Event',
+        en: 'ENG New Event',
         ru: 'Новое событие',
       },
       text: {
-        en: 'New Event English Description Text',
+        en: 'ENG New Event English Description Text',
         ru: 'Новой событие описанное на русском языке',
       },
       type: eventType,
@@ -273,8 +277,8 @@ export class MainConfigStore {
         type: ConditionBlockType.And,
         conditions: [
           {
-            variableCode: 'GOLD',
-            sign: ConditionSign.LessThan,
+            variableCode: 'STEP',
+            sign: ConditionSign.Equal,
             value: 1,
           },
         ],
@@ -283,6 +287,8 @@ export class MainConfigStore {
     };
 
     this.mainConfig.events.push(newEvent);
+
+    this.addAnswer(newEvent);
   }
 
   private isVariableInUse(variable: IVariable): boolean {

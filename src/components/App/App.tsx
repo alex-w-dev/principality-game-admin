@@ -10,6 +10,7 @@ import ExportButton from '../ExportButton/ExportButton';
 import { EventType } from '../../stores/main-config.store';
 import { ImportButton } from '../ImportButton/ImportButton';
 import EventEditor from '../EventEditor/EventEditor';
+import GamePage from '../../pages/Game/Game';
 
 function App () {
   return (
@@ -21,6 +22,7 @@ function App () {
             <Link to={'/common-events'}>Сюжетные события</Link>
             <Link to={'/random-events'}>Случайное события</Link>
             <Link to={'/critical-events'}>Критические события</Link>
+            <Link to={'/game'}>Игра</Link>
             <Link to={'/game-testing'}>Тестирование</Link>
           </nav>
           <ExportButton />
@@ -46,6 +48,9 @@ function App () {
         </Route>
         <Route exact path="/game-testing">
           <GameTesting />
+        </Route>
+        <Route exact path="/game">
+          <GamePage />
         </Route>
         <Route path={['/common-events/:index', '/critical-events/:index', '/random-events/:index']} >
           <EventEditor />
