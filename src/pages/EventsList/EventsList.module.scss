@@ -1,3 +1,16 @@
 .variablesEditor {
-  background-color: #ffc0c0;
+  background-color: #ffffff;
+}
+
+.eventListItem{
+  display: flex;
+  justify-content: space-between;
+
+  &:nth-child(2n) {
+    background-color: #f1f1f1;
+  }
+}
+
+.eventListItemLink {
+  flex-grow: 1;
 }

@@ -65,7 +65,7 @@ export default inject()(
             </td>
             <td>
               <button
-                onClick={() => mainConfigStore.deleteVariable(variable)}
+                onClick={() => mainConfigStore.removeVariable(variable)}
               >Удалить</button>
             </td>
           </tr>

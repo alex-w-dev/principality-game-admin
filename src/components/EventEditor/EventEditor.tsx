@@ -18,6 +18,14 @@ function renderVariants(mainConfigStore: MainConfigStore, event: IEvent) {
       Добавить вариант ответа
     </button>
 
+    {event.answers.length === 1 && <div className={styles.info}>
+      Если вариант выбора только 1, то он автоматически выберется и описание события не будет показано, будет отображаться сразу исход этого ответа.
+    </div>}
+
+    {event.answers.length === 0 && <div className={styles.info}>
+      Если нет вариантов, то будет показано только описание события и кнопка &#34;Далее&#34;
+    </div>}
+
     { event.answers.map((eventAnswer, index) => {
       return <div
         className={styles.rewardContainer}

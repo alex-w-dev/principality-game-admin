@@ -176,11 +176,15 @@ export class MainConfigStore {
   }
 
   removeAnswer(event: IEvent, eventAnswer: IAnswer): void {
-    if (event.answers.length === 1) {
-      return alert('Нельзя удалить последний ответ, в событии всегда должен быть хоть 1 исход');
+    event.answers.splice(event.answers.indexOf(eventAnswer), 1);
+  }
+
+  removeEvent(event: IEvent): void {
+    if (!confirm('Удалить событие?')) {
+      return
     }
 
-    event.answers.splice(event.answers.indexOf(eventAnswer), 1);
+    this.mainConfig.events.splice(this.mainConfig.events.indexOf(event), 1);
   }
 
   addAnswer(event: IEvent): void {
@@ -227,13 +231,15 @@ export class MainConfigStore {
     });
   }
 
-  deleteVariable(variable: IVariable): void {
+  removeVariable(variable: IVariable): void {
     if (
       this.isVariableInUse(variable)
     ) {
-      alert(`Эта переменная уже гдето используется! Невозможно удалить ${variable.code}!`);
+      return alert(`Эта переменная уже где-то используется! Невозможно удалить ${variable.code}!`);
+    }
 
-      return;
+    if (['STEP'].includes(variable.code)) {
+      return alert(`Переменная ${variable.code} зарезеривирована, удалить нельзя`)
     }
 
     this.mainConfig.variables.splice(this.mainConfig.variables.indexOf(variable), 1);
@@ -266,7 +272,7 @@ export class MainConfigStore {
       },
       text: {
         en: 'ENG New Event English Description Text',
-        ru: 'Новой событие описанное на русском языке',
+        ru: 'Новое событие описанное на русском языке',
       },
       type: eventType,
       voiceUrl: {
@@ -286,9 +292,9 @@ export class MainConfigStore {
       answers: [],
     };
 
-    this.mainConfig.events.push(newEvent);
-
     this.addAnswer(newEvent);
+
+    this.mainConfig.events.push(newEvent);
   }
 
   private isVariableInUse(variable: IVariable): boolean {

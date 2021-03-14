@@ -2,7 +2,11 @@
   background-color: #f6fdf1;
   display: grid;
   width: 100%;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 300px 1fr;
+
+  & > * {
+    overflow-y: auto;
+  }
 }
 
 .variables {
