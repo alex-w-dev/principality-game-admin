@@ -5,10 +5,7 @@
 .eventListItem{
   display: flex;
   justify-content: space-between;
-
-  &:nth-child(2n) {
-    background-color: #f1f1f1;
-  }
+  width: 100%;
 }
 
 .eventListItemLink {

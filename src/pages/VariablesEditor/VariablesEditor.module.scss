@@ -1,3 +1,16 @@
 .variablesEditor {
 
 }
+
+.variablesEditorHeader {
+  padding-left: 30px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 10px;
+}
+
+.variablesEditorLine {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 10px;
+}
