@@ -59,7 +59,6 @@ export class Game {
   }
 
   getCurrentEvent(): IEvent {
-    console.log(this.commonEvents, 'this.commonEvents.length');
     const commonEvent = this.commonEvents.filter(this.eventConditionFilter)?.[0];
 
     if (commonEvent) {
@@ -95,13 +94,9 @@ export class Game {
       if (event.answers.length) {
         throw new Error('Если в событии есть хотябы 1 ответ - нельзя давайть пустые ответы на событие')
       }
-
-      this.doneEventAndMoveOn(event);
-
-      return null;
     }
 
-    answer.rewards.forEach(reward => {
+    answer?.rewards.forEach(reward => {
       const variableCode = this.getMainConfigVariableByCode(reward.variableCode);
 
       this.gameState.variables[reward.variableCode] = Math.min(
@@ -119,7 +114,7 @@ export class Game {
       this.doneEventAndMoveOn(event);
     }
 
-    return answer.gameOver || null;
+    return answer?.gameOver || null;
   }
 
   private getMainConfigEvent(event: IEvent): IEvent {
@@ -184,26 +179,26 @@ export class Game {
         en: '(ENG) TEXT ничего не произошло TEXT',
       },
       answers: [
-        {
-          rewards: [],
-          resultText: {
-            ru: 'ничего не произошло RESULT_TEXT',
-            en: '(ENG) ничего не произошло RESULT_TEXT',
-          },
-          voiceUrl: {
-            ru: '',
-            en: '',
-          },
-          imageUrl: '',
-          conditionBlock: {
-            type: ConditionBlockType.Or,
-            conditions: [],
-          },
-          choiceText: {
-            ru: 'ничего не произошло CHOISE_TEXT',
-            en: '(ENG) ничего не произошло CHOISE_TEXT',
-          }
-        }
+        // {
+        //   rewards: [],
+        //   resultText: {
+        //     ru: 'ничего не произошло RESULT_TEXT',
+        //     en: '(ENG) ничего не произошло RESULT_TEXT',
+        //   },
+        //   voiceUrl: {
+        //     ru: '',
+        //     en: '',
+        //   },
+        //   imageUrl: '',
+        //   conditionBlock: {
+        //     type: ConditionBlockType.Or,
+        //     conditions: [],
+        //   },
+        //   choiceText: {
+        //     ru: 'ничего не произошло CHOISE_TEXT',
+        //     en: '(ENG) ничего не произошло CHOISE_TEXT',
+        //   }
+        // }
       ],
       conditionBlock: {
         type: ConditionBlockType.Or,
