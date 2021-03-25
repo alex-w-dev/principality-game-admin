@@ -49,7 +49,9 @@ export default inject()(
       >
         <button
           onClick={() => mainConfigStore.addNewEvent(props.eventType)}
-        >Добавить {eventTypeToName(props.eventType)}</button>
+        >
+          Добавить {eventTypeToName(props.eventType)}
+        </button>
         <hr/>
         <SortableList
           items={mainConfigStore.mainConfig.events.filter(e => e.type === props.eventType)}
