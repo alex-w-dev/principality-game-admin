@@ -48,76 +48,97 @@ export default class GamePage extends React.Component<any, State> {
           </tbody>
         </table>
       </div>
-      <div className={styles.currentEvent}>
-        {
-          this.state.currentAnswer
-            ? <>
-              <div>
-                {/*<h4 dangerouslySetInnerHTML={{__html: this.state.currentEvent.title.ru}} />*/}
-                <div>
-                  <b>Исход задания:</b>
-                </div>
-                <div dangerouslySetInnerHTML={{__html: this.state.currentAnswer.resultText.ru}} />
-              </div>
-              <div>
-                <div>
-                  <b>Дальше:</b>
-                </div>
-                <button
-                  onClick={this.onMoveOnClick}
+      <div>
+        <div className={styles.currentEvent}>
+          <div>
+            {/*<h4 dangerouslySetInnerHTML={{__html: this.state.currentEvent.title.ru}} />*/}
+            <div>
+              <b>Описание задания:</b>
+            </div>
+            <div dangerouslySetInnerHTML={{__html: this.state.currentEvent.text.ru}} />
+            <div>
+              <b>Тип события:</b>
+            </div>
+            <div hidden={this.state.currentEvent.type !== EventType.Common}>
+              Сюжетное
+            </div>
+            <div hidden={this.state.currentEvent.type !== EventType.Random}>
+              Случайное
+            </div>
+            <div hidden={this.state.currentEvent.type !== EventType.Critical}>
+              Критическое
+            </div>
+          </div>
+          <div>
+            <div>
+              <b>Варианты:</b>
+            </div>
+            {this.state.currentEvent.answers.length
+              ? this.state.currentEvent.answers.map((answer, index) => {
+                return <div
+                  key={answer.choiceText.ru + index}
+                  className={`${styles.answer} ${this.state.currentAnswer === answer && styles.active}`}
+                  onClick={() => this.onChooseAnswer(answer)}
                 >
-                  Дальше
-                </button>
-              </div>
-            </>
-
-            : <>
-              <div>
-                {/*<h4 dangerouslySetInnerHTML={{__html: this.state.currentEvent.title.ru}} />*/}
+                  {answer.choiceText.ru}
+                </div>
+              })
+              : <button
+                onClick={this.onMoveOnWithoutAnswers}
+              >
+                Всё понятно, дальше!
+              </button>}
+          </div>
+        </div>
+        <div className={styles.currentEvent}>
+          {
+            this.state.currentAnswer
+              ? <>
                 <div>
-                  <b>Описание задания:</b>
-                </div>
-                <div dangerouslySetInnerHTML={{__html: this.state.currentEvent.text.ru}} />
-                <div>
-                  <b>Тип события:</b>
-                </div>
-                <div hidden={this.state.currentEvent.type !== EventType.Common}>
-                  Сюжетное
-                </div>
-                <div hidden={this.state.currentEvent.type !== EventType.Random}>
-                  Случайное
-                </div>
-                <div hidden={this.state.currentEvent.type !== EventType.Critical}>
-                  Критическое
-                </div>
-              </div>
-              <div>
-                <div>
-                  <b>Варианты:</b>
-                </div>
-                {this.state.currentEvent.answers.map(answer => {
-                  return <div
-                    key={answer.choiceText.ru}
-                    className={styles.answer}
-                    onClick={() => this.onChooseAnswer(answer)}
-                  >
-                    {answer.choiceText.ru}
+                  {/*<h4 dangerouslySetInnerHTML={{__html: this.state.currentEvent.title.ru}} />*/}
+                  <div>
+                    <b>Исход задания:</b>
                   </div>
-                })}
-              </div>
-            </>
-        }
+                  <div dangerouslySetInnerHTML={{__html: this.state.currentAnswer.resultText.ru}} />
+                </div>
+                <div>
+                  <div>
+                    <b>Дальше:</b>
+                  </div>
+                  <button
+                    onClick={this.onMoveOnClick}
+                  >
+                    Дальше
+                  </button>
+                </div>
+              </>
+
+              : null
+          }
+        </div>
       </div>
     </div>;
   }
 
   onChooseAnswer = (answer: IAnswer) => {
+    if (this.state.currentAnswer) {
+      return;
+    }
     const isGameOver = this.game.giveAnswer(this.state.currentEvent, answer);
     this.setState({
       currentAnswer: answer,
-      currentEvent: null,
       isGameOver,
       gameState: this.game.getClonedGameState(),
+    })
+  }
+
+  onMoveOnWithoutAnswers = () => {
+    const isGameOver = this.game.giveAnswer(this.state.currentEvent);
+    this.setState({
+      isGameOver,
+      gameState: this.game.getClonedGameState(),
+    }, () => {
+      this.onMoveOnClick();
     })
   }
 
@@ -125,9 +146,16 @@ export default class GamePage extends React.Component<any, State> {
     if (this.state.isGameOver) {
       alert('Ты проиграл! Ходов больше нет!');
     } else {
+      const currentEvent = this.game.getCurrentEvent();
+
       this.setState({
-        currentEvent: this.game.getCurrentEvent(),
+        currentEvent: currentEvent,
         currentAnswer: null,
+      }, () => {
+        // автоматически происходит ответ, если есть только 1 выбор
+        if (currentEvent.answers.length === 1) {
+          this.onChooseAnswer(currentEvent.answers[0])
+        }
       })
     }
   }

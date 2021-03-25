@@ -1,3 +1,4 @@
+import { shuffle } from 'lodash';
 import {
   ConditionBlockType,
   ConditionSign,
@@ -7,7 +8,7 @@ import {
   ICondition,
   IConditionBlock,
   IEvent,
-  IMainConfig,
+  IMainConfig, IVariable,
 } from '../stores/main-config.store';
 
 export type IGameState = {
@@ -62,10 +63,12 @@ export class Game {
     const commonEvent = this.commonEvents.filter(this.eventConditionFilter)?.[0];
 
     if (commonEvent) {
+      // сюжетное событие
       return commonEvent;
     }
 
     if (!this.gameState.stepsWithCriticalEvents.includes(this.gameState.variables['STEP'])) {
+      // если на этом ходу не было критических событий - ищем.
       const criticalEvent = this.criticalEvents.filter(this.eventConditionFilter)?.[0];
 
       if (criticalEvent) {
@@ -73,35 +76,74 @@ export class Game {
       }
     }
 
-    const randomEvent = this.randomEvents.filter(this.eventConditionFilter)?.[0];
+    const randomEvent = shuffle(
+      this.randomEvents
+        .filter(this.eventConditionFilter)
+        .filter((e) => !this.gameState.doneEventIndexes.includes(this.getMainConfigEventIndex(e)))
+    )?.[0];
 
     if (randomEvent) {
+      // случайное событие
       return randomEvent;
     }
 
     return this.getFakeEvent();
   }
 
-  giveAnswer(event: IEvent, answer: IAnswer): GameOverType | null {
+  giveAnswer(event: IEvent, answer?: IAnswer): GameOverType | null {
+    if (!answer) {
+      if (event.answers.length) {
+        throw new Error('Если в событии есть хотябы 1 ответ - нельзя давайть пустые ответы на событие')
+      }
+
+      this.doneEventAndMoveOn(event);
+
+      return null;
+    }
+
     answer.rewards.forEach(reward => {
-      this.gameState.variables[reward.variableCode] = this.gameState.variables[reward.variableCode] + reward.value;
+      const variableCode = this.getMainConfigVariableByCode(reward.variableCode);
+
+      this.gameState.variables[reward.variableCode] = Math.min(
+        variableCode.max === '' ? Infinity : variableCode.max,
+        Math.max(
+          variableCode.min === '' ? -Infinity : variableCode.min,
+          this.gameState.variables[reward.variableCode] + reward.value,
+        )
+      );
     })
 
     if (event.type === EventType.Critical) {
       this.gameState.stepsWithCriticalEvents.push(this.gameState.variables['STEP']);
     } else {
-      const indexOfEvent = this.mainConfig.events.indexOf(
-        this.mainConfig.events.find((e) => e.text.ru === event.text.ru),
-      )
-
-      if (indexOfEvent !== -1) {
-        this.gameState.doneEventIndexes.push(indexOfEvent);
-      }
-
-      this.gameState.variables['STEP']++;
+      this.doneEventAndMoveOn(event);
     }
 
     return answer.gameOver || null;
+  }
+
+  private getMainConfigEvent(event: IEvent): IEvent {
+    return this.mainConfig.events.find((e) => e.text.ru === event.text.ru);
+  }
+
+  private getMainConfigEventIndex(event: IEvent): number {
+    return this.mainConfig.events.indexOf(
+      this.getMainConfigEvent(event),
+    );
+  }
+
+  private getMainConfigVariableByCode(code: string): IVariable {
+    return this.mainConfig.variables.find(v => v.code === code);
+  }
+
+  private doneEventAndMoveOn(event: IEvent): void {
+    const indexOfEvent = this.getMainConfigEventIndex(event);
+
+    if (indexOfEvent !== -1) {
+      this.gameState.doneEventIndexes.push(indexOfEvent);
+    }
+
+    this.gameState.variables['STEP']++;
   }
 
   private eventConditionFilter = (event: IEvent): boolean => {
