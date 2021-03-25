@@ -10,6 +10,7 @@ import {
   IEvent,
   IMainConfig, IVariable,
 } from '../stores/main-config.store';
+import { toJS } from 'mobx';
 
 export type IGameState = {
   variables: {
@@ -59,34 +60,43 @@ export class Game {
   }
 
   getCurrentEvent(): IEvent {
+    let event: IEvent;
+
     const commonEvent = this.commonEvents.filter(this.eventConditionFilter)?.[0];
 
     if (commonEvent) {
       // сюжетное событие
-      return commonEvent;
+      event = commonEvent;
     }
 
-    if (!this.gameState.stepsWithCriticalEvents.includes(this.gameState.variables['STEP'])) {
+    if (!event && !this.gameState.stepsWithCriticalEvents.includes(this.gameState.variables['STEP'])) {
       // если на этом ходу не было критических событий - ищем.
       const criticalEvent = this.criticalEvents.filter(this.eventConditionFilter)?.[0];
 
       if (criticalEvent) {
-        return criticalEvent;
+        event = criticalEvent;
       }
     }
 
-    const randomEvent = shuffle(
-      this.randomEvents
-        .filter(this.eventConditionFilter)
-        .filter((e) => !this.gameState.doneEventIndexes.includes(this.getMainConfigEventIndex(e)))
-    )?.[0];
+    if (!event) {
+      const randomEvent = shuffle(
+        this.randomEvents
+          .filter(this.eventConditionFilter)
+          .filter((e) => !this.gameState.doneEventIndexes.includes(this.getMainConfigEventIndex(e)))
+      )?.[0];
 
-    if (randomEvent) {
-      // случайное событие
-      return randomEvent;
+      if (randomEvent) {
+        // случайное событие
+        event = randomEvent;
+      }
     }
 
-    return this.getFakeEvent();
+    event = event || this.getFakeEvent();
+
+    // уберем ответы, которые не соответсвуют их условиям
+    event.answers = event.answers.filter(this.eventConditionFilter);
+
+    return event;
   }
 
   giveAnswer(event: IEvent, answer?: IAnswer): GameOverType | null {
@@ -141,7 +151,7 @@ export class Game {
     this.gameState.variables['STEP']++;
   }
 
-  private eventConditionFilter = (event: IEvent): boolean => {
+  private eventConditionFilter = (event: IEvent | IAnswer): boolean => {
     return this.isConditionTruly(event.conditionBlock);
   }
 
