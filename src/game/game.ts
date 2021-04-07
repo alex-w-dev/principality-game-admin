@@ -91,7 +91,7 @@ export class Game {
       }
     }
 
-    event = event || this.getFakeEvent();
+    event = toJS(event || this.getFakeEvent());
 
     // уберем ответы, которые не соответсвуют их условиям
     event.answers = event.answers.filter(this.eventConditionFilter);
@@ -127,11 +127,11 @@ export class Game {
     return answer?.gameOver || null;
   }
 
-  private getMainConfigEvent(event: IEvent): IEvent {
+  getMainConfigEvent(event: IEvent): IEvent {
     return this.mainConfig.events.find((e) => e.text.ru === event.text.ru);
   }
 
-  private getMainConfigEventIndex(event: IEvent): number {
+  getMainConfigEventIndex(event: IEvent): number {
     return this.mainConfig.events.indexOf(
       this.getMainConfigEvent(event),
     );

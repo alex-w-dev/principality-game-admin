@@ -53,33 +53,36 @@ const StoredApp = inject()(
               <ExportButton />
               <ImportButton />
             </div>
-            <Route exact path="/">
-              <VariablesEditor />
-            </Route>
-            <Route exact path="/common-events">
-              <EventsEditor
-                eventType={EventType.Common}
-              />
-            </Route>
-            <Route exact path="/random-events">
-              <EventsEditor
-                eventType={EventType.Random}
-              />
-            </Route>
-            <Route exact path="/critical-events">
-              <EventsEditor
-                eventType={EventType.Critical}
-              />
-            </Route>
-            <Route exact path="/game-testing">
-              <GameTesting />
-            </Route>
-            <Route exact path="/game">
-              <GamePage />
-            </Route>
-            <Route path={['/common-events/:index', '/critical-events/:index', '/random-events/:index']} >
-              <EventEditor />
-            </Route>
+
+            <div style={{marginTop: '15px'}}>
+              <Route exact path="/">
+                <VariablesEditor />
+              </Route>
+              <Route exact path="/common-events">
+                <EventsEditor
+                  eventType={EventType.Common}
+                />
+              </Route>
+              <Route exact path="/random-events">
+                <EventsEditor
+                  eventType={EventType.Random}
+                />
+              </Route>
+              <Route exact path="/critical-events">
+                <EventsEditor
+                  eventType={EventType.Critical}
+                />
+              </Route>
+              <Route exact path="/game-testing">
+                <GameTesting />
+              </Route>
+              <Route exact path="/game">
+                <GamePage />
+              </Route>
+              <Route path={['/common-events/:index', '/critical-events/:index', '/random-events/:index']} >
+                <EventEditor />
+              </Route>
+            </div>
 
 
             {/*<img src={reactLogo.default} height="480" />*/}
