@@ -79,7 +79,7 @@ export class GameTester {
 
     answered.event = {
       eventIndex: eventIndex,
-      answers: currentEvent.answers?.map((answer, index) =>  {
+      answers: (currentEvent.answers.length && currentEvent.answers || [undefined]).map((answer, index) =>  {
         this.answeredCount++;
         const isGameOver = game.giveAnswer(currentEvent, answer);
         const gameStateOnAnswer = game.getClonedGameState();
@@ -98,7 +98,9 @@ export class GameTester {
           } else if (isGameOver === GameOverType.Win) {
             this.gameOverWinsCount ++;
           }
-        } else {
+        } else if (gameStateOnAnswer.variables['STEP'] > 50) {
+          // 50 ходов
+        } else  {
           this.needToNextEvent.push(answered);
         }
 
