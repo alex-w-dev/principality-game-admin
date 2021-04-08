@@ -12,13 +12,12 @@ interface ITestEvent {
 }
 
 export enum GameTesterStatus {
-  Init = 'пусто',
   Process = 'процесс',
   Complete = 'завершено',
 }
 
 export class GameTester {
-  status: GameTesterStatus;
+  status: GameTesterStatus = GameTesterStatus.Complete;
 
   testResult: ITestAnswer[] = [];
   needToNextEvent: ITestAnswer[] = [];
@@ -33,6 +32,7 @@ export class GameTester {
 
   constructor(
     private mainConfig: IMainConfig,
+    private stepsLimit: number,
   ) { }
 
   stop(): void {
@@ -98,7 +98,7 @@ export class GameTester {
           } else if (isGameOver === GameOverType.Win) {
             this.gameOverWinsCount ++;
           }
-        } else if (gameStateOnAnswer.variables['STEP'] > 50) {
+        } else if (this.stepsLimit && gameStateOnAnswer.variables['STEP'] > this.stepsLimit) {
           // 50 ходов
         } else  {
           this.needToNextEvent.push(answered);
