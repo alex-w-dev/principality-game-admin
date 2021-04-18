@@ -2,8 +2,37 @@ import React from 'react';
 import styles from './GameTesting.module.scss';
 import { toJS } from 'mobx';
 import { mainConfigStore } from '../../hooks/use-main-config-store';
-import { GameTester, GameTesterStatus } from '../../game/game-tester';
-import { EventType } from '../../stores/main-config.store';
+import { GameTester, GameTesterStatus, ITestEvent } from '../../game/game-tester';
+import { EventType, GameOverType } from '../../stores/main-config.store';
+import styled from 'styled-components';
+
+function GOToColor(gameOver: GameOverType): string {
+  switch (gameOver) {
+    case GameOverType.Defeat: return 'red';
+    case GameOverType.Win: return 'green';
+    default: return 'inherit'
+  }
+}
+
+const TestTable = styled.div`
+  width: 99999px;
+`
+
+const TestCellText = styled.div<{gameOver?: GameOverType}>`
+  min-width: 10px;
+  min-height: 10px;
+  background: ${props => GOToColor(props.gameOver)};
+`
+
+const TestCell = styled.div`
+  display: flex;
+`
+const TestCellChildren = styled.div`
+  min-width: 10px;
+  min-height: 10px;
+  border: 1px solid #e2e2e2;
+  margin-left: 5px;
+`
 
 interface Stats {
   useRandomEvents: boolean;
@@ -13,8 +42,8 @@ interface Stats {
 export default class GameTesting extends React.Component<any, Stats> {
 
   state = {
-    useRandomEvents: true,
-    stepsLimit: 50,
+    useRandomEvents: false,
+    stepsLimit: 10,
   }
 
   gameTester = new GameTester(mainConfigStore.mainConfig, this.state.stepsLimit);
@@ -33,6 +62,24 @@ export default class GameTesting extends React.Component<any, Stats> {
     this.gameTester.stop();
   }
 
+  renderResultCell(testEvent: ITestEvent) {
+    return <TestCell key={`${testEvent.eventIndex}-${testEvent.answerIndex}`}>
+      <TestCellText gameOver={testEvent.gameOver}>{testEvent.eventIndex}/{testEvent.answerIndex}</TestCellText>
+      {testEvent.children && <TestCellChildren>
+        {testEvent.children?.map(e => this.renderResultCell(e))}
+      </TestCellChildren>}
+    </TestCell>
+  }
+
+  renderResultTable() {
+    if (this.gameTester.status !== GameTesterStatus.Complete) return null;
+
+    if (!this.gameTester.testResult[0]) return null;
+
+    return <TestTable>
+      {this.renderResultCell(this.gameTester.testResult[0])}
+    </TestTable>;
+  }
 
   render() {
     return <div
@@ -97,6 +144,9 @@ export default class GameTesting extends React.Component<any, Stats> {
       <div>
         случаи когда был проигрыш: {this.gameTester.gameOverDefeats.length}
       </div>
+      {
+        this.renderResultTable()
+      }
     </div>;
   }
 }

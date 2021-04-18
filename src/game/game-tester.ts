@@ -1,11 +1,12 @@
 import { GameOverType, IAnswer, IMainConfig } from '../stores/main-config.store';
 import { Game, IGameState } from './game';
 
-interface ITestEvent {
+export interface ITestEvent {
   answerIndex?: number,
   gameStateBeforeAnswer?: IGameState,
   eventIndex?: number,
-  children?: ITestEvent[]
+  gameOver?: GameOverType,
+  children?: ITestEvent[],
 }
 
 export enum GameTesterStatus {
@@ -87,6 +88,8 @@ export class GameTester {
         }
 
         if (isGameOver) {
+          answered.gameOver = isGameOver;
+
           if (isGameOver === GameOverType.Defeat) {
             this.gameOverDefeats.push({
               eventIndex,
@@ -96,7 +99,10 @@ export class GameTester {
           } else if (isGameOver === GameOverType.Win) {
             this.gameOverWinsCount ++;
           }
+
         } else if (this.stepsLimit && gameStateAfterAnswer.variables['STEP'] > this.stepsLimit) {
+
+          delete answered.gameStateBeforeAnswer;
           // 50 ходов
         } else  {
           this.needToNextEvent.push(answered);
