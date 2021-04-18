@@ -1,14 +1,11 @@
 import { GameOverType, IAnswer, IMainConfig } from '../stores/main-config.store';
 import { Game, IGameState } from './game';
 
-interface ITestAnswer {
-  answerIndex: number,
-  event?: ITestEvent,
-  gameStateOnAnswer?: IGameState,
-}
 interface ITestEvent {
-  eventIndex: number,
-  answers: ITestAnswer[]
+  answerIndex?: number,
+  gameStateBeforeAnswer?: IGameState,
+  eventIndex?: number,
+  children?: ITestEvent[]
 }
 
 export enum GameTesterStatus {
@@ -19,14 +16,14 @@ export enum GameTesterStatus {
 export class GameTester {
   status: GameTesterStatus = GameTesterStatus.Complete;
 
-  testResult: ITestAnswer[] = [];
-  needToNextEvent: ITestAnswer[] = [];
+  testResult: ITestEvent[] = [];
+  needToNextEvent: ITestEvent[] = [];
   answeredCount = 0;
 
   gameOverDefeats: {
     eventIndex: number,
     gameStatsVariables: IGameState['variables'],
-    answer: ITestAnswer,
+    answer: ITestEvent,
   }[] = [];
   gameOverWinsCount = 0;
 
@@ -45,9 +42,10 @@ export class GameTester {
     this.status = GameTesterStatus.Process;
 
     const game = new Game(this.mainConfig);
-    const initialAnswer: ITestAnswer = {
+    const initialAnswer: ITestEvent = {
       answerIndex: 0,
-      gameStateOnAnswer: game.getClonedGameState(),
+      children: [],
+      gameStateBeforeAnswer: game.getClonedGameState(),
     }
 
     this.testResult = [initialAnswer];
@@ -70,35 +68,35 @@ export class GameTester {
       return;
     }
 
-    const game = new Game(this.mainConfig, answered.gameStateOnAnswer);
-    delete answered.gameStateOnAnswer;
-
+    const gameStateBeforeAnswer = answered.gameStateBeforeAnswer;
+    const game = new Game(this.mainConfig, answered.gameStateBeforeAnswer);
     const currentEvent = game.getCurrentEvent();
-
     const eventIndex = game.getMainConfigEventIndex(currentEvent);
 
-    answered.event = {
+    Object.assign(answered, {
       eventIndex: eventIndex,
-      answers: (currentEvent.answers.length && currentEvent.answers || [undefined]).map((answer, index) =>  {
+      children: (currentEvent.answers.length && currentEvent.answers || [undefined]).map((answer, index) =>  {
         this.answeredCount++;
+        const game = new Game(this.mainConfig, gameStateBeforeAnswer);
         const isGameOver = game.giveAnswer(currentEvent, answer);
-        const gameStateOnAnswer = game.getClonedGameState();
-        const answered = {
+        const gameStateAfterAnswer = game.getClonedGameState();
+        const answered: ITestEvent = {
           answerIndex: index,
-          gameStateOnAnswer,
+          gameStateBeforeAnswer: gameStateAfterAnswer,
+          eventIndex,
         }
 
         if (isGameOver) {
           if (isGameOver === GameOverType.Defeat) {
             this.gameOverDefeats.push({
               eventIndex,
-              gameStatsVariables: gameStateOnAnswer.variables,
+              gameStatsVariables: gameStateAfterAnswer.variables,
               answer: answered,
             });
           } else if (isGameOver === GameOverType.Win) {
             this.gameOverWinsCount ++;
           }
-        } else if (this.stepsLimit && gameStateOnAnswer.variables['STEP'] > this.stepsLimit) {
+        } else if (this.stepsLimit && gameStateAfterAnswer.variables['STEP'] > this.stepsLimit) {
           // 50 ходов
         } else  {
           this.needToNextEvent.push(answered);
@@ -106,8 +104,9 @@ export class GameTester {
 
         return answered;
       }) || [],
-    }
+    } as Partial<ITestEvent>);
 
+    delete answered.gameStateBeforeAnswer;
 
     setTimeout(() => {
       this.nextEvent();
