@@ -165,16 +165,24 @@ export default class GameTesting extends React.Component<any, Stats> {
     </TestCell>
   }
 
+  cachedTable;
+  cachedRestRes;
   renderResultTable() {
     if (this.gameTester.status !== GameTesterStatus.Complete) return null;
 
     if (!this.gameTester.testResult[0]) return null;
 
-    return <TestTable
-      /*onMouseLeave={() => this.setState({hoveredTestEvent: null})}*/
-    >
-      {this.renderResultCell(this.gameTester.testResult[0])}
-    </TestTable>;
+    if (this.cachedRestRes !== this.gameTester || !this.cachedTable) {
+      this.cachedRestRes = this.gameTester;
+      this.cachedTable = <TestTable
+        key={this.gameTester.answeredCount}
+        /*onMouseLeave={() => this.setState({hoveredTestEvent: null})}*/
+      >
+        {this.renderResultCell(this.gameTester.testResult[0])}
+      </TestTable>
+    }
+
+    return this.cachedTable;
   }
 
   render() {
