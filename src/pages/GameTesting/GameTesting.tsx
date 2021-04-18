@@ -5,6 +5,9 @@ import { mainConfigStore } from '../../hooks/use-main-config-store';
 import { GameTester, GameTesterStatus, ITestEvent } from '../../game/game-tester';
 import { EventType, GameOverType } from '../../stores/main-config.store';
 import styled from 'styled-components';
+import ReactTooltip from 'react-tooltip';
+import VariableStateTable from '../../components/VariableStateTable';
+import EventDescription from '../../components/EventDescription';
 
 function GOToColor(gameOver: GameOverType): string {
   switch (gameOver) {
@@ -37,6 +40,7 @@ const TestCellChildren = styled.div`
 interface Stats {
   useRandomEvents: boolean;
   stepsLimit: number;
+  hoveredTestEvent?: ITestEvent;
 }
 
 export default class GameTesting extends React.Component<any, Stats> {
@@ -44,7 +48,7 @@ export default class GameTesting extends React.Component<any, Stats> {
   state = {
     useRandomEvents: false,
     stepsLimit: 10,
-  }
+  } as Stats
 
   gameTester = new GameTester(mainConfigStore.mainConfig, this.state.stepsLimit);
 
@@ -62,9 +66,82 @@ export default class GameTesting extends React.Component<any, Stats> {
     this.gameTester.stop();
   }
 
+  renderTooltip() {
+    if (!this.state.hoveredTestEvent) {
+      return null;
+    }
+
+    const hoveredTestEvent = this.state.hoveredTestEvent;
+    const event = hoveredTestEvent.eventIndex >= 0 ? this.gameTester.mainConfig.events[hoveredTestEvent.eventIndex] : null;
+
+    return <ReactTooltip
+      id='global'
+      aria-haspopup='true'
+      role='example'
+      type="light"
+      className={styles.tooltipStyle}
+    >
+      <table
+        style={{
+          background: 'white',
+        }}
+      >
+        <thead>
+        <tr>
+          <td>
+            Variables Before Answer
+          </td>
+          <td>
+            Event
+          </td>
+          <td>
+            Answer
+          </td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            <VariableStateTable
+              variables={hoveredTestEvent.gameStateBeforeAnswer.variables}
+            />
+          </td>
+          <td>
+            {event && <EventDescription
+              event={event}
+            /> || 'Empty Event'}
+          </td>
+          <td>
+            {event && event.answers.map((a, index )=> {
+              const t = a.choiceText.ru || a.resultText.ru;
+
+              return <div
+                style={{ marginTop: '15px' }}
+                key={index}
+              >
+                {index === hoveredTestEvent.answerIndex && <b>{t}</b> || t}
+              </div>
+            })}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </ReactTooltip>
+  }
+
   renderResultCell(testEvent: ITestEvent) {
     return <TestCell key={`${testEvent.eventIndex}-${testEvent.answerIndex}`}>
-      <TestCellText gameOver={testEvent.gameOver}>{testEvent.eventIndex}/{testEvent.answerIndex}</TestCellText>
+      <TestCellText
+        gameOver={testEvent.gameOver}
+        onMouseEnter={e => {
+          e.stopPropagation();
+          this.setState({
+            hoveredTestEvent: testEvent,
+          })
+        }}
+      >
+        {testEvent.eventIndex}/{testEvent.answerIndex}
+      </TestCellText>
       {testEvent.children && <TestCellChildren>
         {testEvent.children?.map(e => this.renderResultCell(e))}
       </TestCellChildren>}
@@ -76,7 +153,10 @@ export default class GameTesting extends React.Component<any, Stats> {
 
     if (!this.gameTester.testResult[0]) return null;
 
-    return <TestTable>
+    return <TestTable
+      data-tip
+      data-for='global'
+    >
       {this.renderResultCell(this.gameTester.testResult[0])}
     </TestTable>;
   }
@@ -146,6 +226,10 @@ export default class GameTesting extends React.Component<any, Stats> {
       </div>
       {
         this.renderResultTable()
+      }
+
+      {
+        this.renderTooltip()
       }
     </div>;
   }

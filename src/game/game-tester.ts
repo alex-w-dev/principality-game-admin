@@ -29,8 +29,8 @@ export class GameTester {
   gameOverWinsCount = 0;
 
   constructor(
-    private mainConfig: IMainConfig,
-    private stepsLimit: number,
+    public mainConfig: IMainConfig,
+    public stepsLimit: number,
   ) { }
 
   stop(): void {
@@ -48,6 +48,8 @@ export class GameTester {
       children: [],
       gameStateBeforeAnswer: game.getClonedGameState(),
     }
+
+    console.log(initialAnswer.gameStateBeforeAnswer, 'initialAnswer.gameStateBeforeAnswer');
 
     this.testResult = [initialAnswer];
     this.needToNextEvent.push(initialAnswer);
@@ -101,8 +103,6 @@ export class GameTester {
           }
 
         } else if (this.stepsLimit && gameStateAfterAnswer.variables['STEP'] > this.stepsLimit) {
-
-          delete answered.gameStateBeforeAnswer;
           // 50 ходов
         } else  {
           this.needToNextEvent.push(answered);
@@ -111,8 +111,6 @@ export class GameTester {
         return answered;
       }) || [],
     } as Partial<ITestEvent>);
-
-    delete answered.gameStateBeforeAnswer;
 
     setTimeout(() => {
       this.nextEvent();

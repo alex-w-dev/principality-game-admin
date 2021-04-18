@@ -3,6 +3,8 @@ import styles from './Game.module.scss';
 import { Game, IGameState } from '../../game/game';
 import { mainConfigStore } from '../../hooks/use-main-config-store';
 import { EventType, GameOverType, IAnswer, IEvent } from '../../stores/main-config.store';
+import VariableStateTable from '../../components/VariableStateTable';
+import EventDescription from '../../components/EventDescription';
 
 interface State {
   currentEvent: IEvent;
@@ -35,40 +37,15 @@ export default class GamePage extends React.Component<any, State> {
         <div>
           <b>Текущее игровое состояние:</b>
         </div>
-        <table>
-          <tbody>
-          {Object.entries(this.state.gameState.variables).map(([variableCode, value]) => {
-            return <tr
-              key={variableCode}
-            >
-              <td>{variableCode}</td>
-              <td>{value}</td>
-            </tr>
-          })}
-          </tbody>
-        </table>
+        <VariableStateTable
+          variables={this.state.gameState.variables}
+        />
       </div>
       <div>
         <div className={styles.currentEvent}>
-          <div>
-            {/*<h4 dangerouslySetInnerHTML={{__html: this.state.currentEvent.title.ru}} />*/}
-            <div>
-              <b>Описание задания:</b>
-            </div>
-            <div dangerouslySetInnerHTML={{__html: this.state.currentEvent.text.ru}} />
-            <div>
-              <b>Тип события:</b>
-            </div>
-            <div hidden={this.state.currentEvent.type !== EventType.Common}>
-              Сюжетное
-            </div>
-            <div hidden={this.state.currentEvent.type !== EventType.Random}>
-              Случайное
-            </div>
-            <div hidden={this.state.currentEvent.type !== EventType.Critical}>
-              Критическое
-            </div>
-          </div>
+          <EventDescription
+            event={this.state.currentEvent}
+          />
           <div>
             <div>
               <b>Варианты:</b>
