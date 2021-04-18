@@ -128,7 +128,14 @@ export class Game {
   }
 
   getMainConfigEvent(event: IEvent): IEvent {
-    return this.mainConfig.events.find((e) => e.text.ru === event.text.ru);
+    return this.mainConfig.events.find((e) => (
+      e.text.ru === event.text.ru &&
+      e.title.ru === event.title.ru &&
+      e.answers.every((a, i) => (
+        event.answers[i].resultText.ru === a.resultText.ru &&
+        event.answers[i].choiceText.ru === a.choiceText.ru
+      ) )
+    ));
   }
 
   getMainConfigEventIndex(event: IEvent): number {

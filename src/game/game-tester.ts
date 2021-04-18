@@ -49,8 +49,6 @@ export class GameTester {
       gameStateBeforeAnswer: game.getClonedGameState(),
     }
 
-    console.log(initialAnswer.gameStateBeforeAnswer, 'initialAnswer.gameStateBeforeAnswer');
-
     this.testResult = [initialAnswer];
     this.needToNextEvent.push(initialAnswer);
 
@@ -72,17 +70,16 @@ export class GameTester {
     }
 
     const gameStateBeforeAnswer = answered.gameStateBeforeAnswer;
-    const game = new Game(this.mainConfig, answered.gameStateBeforeAnswer);
+    const game = new Game(this.mainConfig, JSON.parse(JSON.stringify(gameStateBeforeAnswer)));
     const currentEvent = game.getCurrentEvent();
     const eventIndex = game.getMainConfigEventIndex(currentEvent);
 
     Object.assign(answered, {
-      eventIndex: eventIndex,
       children: (currentEvent.answers.length && currentEvent.answers || [undefined]).map((answer, index) =>  {
         this.answeredCount++;
-        const game = new Game(this.mainConfig, gameStateBeforeAnswer);
-        const isGameOver = game.giveAnswer(currentEvent, answer);
-        const gameStateAfterAnswer = game.getClonedGameState();
+        const game_ = new Game(this.mainConfig, JSON.parse(JSON.stringify(gameStateBeforeAnswer)));
+        const isGameOver = game_.giveAnswer(currentEvent, answer);
+        const gameStateAfterAnswer = game_.getClonedGameState();
         const answered: ITestEvent = {
           answerIndex: index,
           gameStateBeforeAnswer: gameStateAfterAnswer,
@@ -108,6 +105,7 @@ export class GameTester {
           this.needToNextEvent.push(answered);
         }
 
+       //  debugger
         return answered;
       }) || [],
     } as Partial<ITestEvent>);

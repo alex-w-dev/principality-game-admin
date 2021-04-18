@@ -37,10 +37,20 @@ const TestCellChildren = styled.div`
   margin-left: 5px;
 `
 
+const Result = styled.div<{atTop: boolean}>`
+  position: fixed;
+  ${props => props.atTop ? 'top: 0' : 'bottom: 0'};
+  right: 0;
+  max-height: 50vh;
+  overflow-y: auto;
+  border: 1px solid black;
+`
+
 interface Stats {
   useRandomEvents: boolean;
   stepsLimit: number;
   hoveredTestEvent?: ITestEvent;
+  resultAtTop: boolean;
 }
 
 export default class GameTesting extends React.Component<any, Stats> {
@@ -48,6 +58,7 @@ export default class GameTesting extends React.Component<any, Stats> {
   state = {
     useRandomEvents: false,
     stepsLimit: 10,
+    resultAtTop: true,
   } as Stats
 
   gameTester = new GameTester(mainConfigStore.mainConfig, this.state.stepsLimit);
@@ -58,12 +69,19 @@ export default class GameTesting extends React.Component<any, Stats> {
     this.interval = setInterval(() => {
       this.forceUpdate();
     }, 500)
-
+    // window.addEventListener('mousemove', this.onWindowMouseMove)
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
     this.gameTester.stop();
+    // window.removeEventListener('mousemove', this.onWindowMouseMove)
+  }
+
+  onWindowMouseMove = (e) => {
+    this.setState({
+      resultAtTop: window.innerHeight / 2 < e.screenY,
+    })
   }
 
   renderTooltip() {
@@ -74,12 +92,11 @@ export default class GameTesting extends React.Component<any, Stats> {
     const hoveredTestEvent = this.state.hoveredTestEvent;
     const event = hoveredTestEvent.eventIndex >= 0 ? this.gameTester.mainConfig.events[hoveredTestEvent.eventIndex] : null;
 
-    return <ReactTooltip
-      id='global'
-      aria-haspopup='true'
-      role='example'
-      type="light"
-      className={styles.tooltipStyle}
+    return <Result
+      atTop={this.state.resultAtTop}
+      onMouseEnter={() => this.setState({
+        resultAtTop: !this.state.resultAtTop,
+      })}
     >
       <table
         style={{
@@ -89,7 +106,7 @@ export default class GameTesting extends React.Component<any, Stats> {
         <thead>
         <tr>
           <td>
-            Variables Before Answer
+            Variables After Answer
           </td>
           <td>
             Event
@@ -126,7 +143,7 @@ export default class GameTesting extends React.Component<any, Stats> {
         </tr>
         </tbody>
       </table>
-    </ReactTooltip>
+    </Result>
   }
 
   renderResultCell(testEvent: ITestEvent) {
@@ -154,8 +171,7 @@ export default class GameTesting extends React.Component<any, Stats> {
     if (!this.gameTester.testResult[0]) return null;
 
     return <TestTable
-      data-tip
-      data-for='global'
+      /*onMouseLeave={() => this.setState({hoveredTestEvent: null})}*/
     >
       {this.renderResultCell(this.gameTester.testResult[0])}
     </TestTable>;
