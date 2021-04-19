@@ -157,7 +157,7 @@ export default class GameTesting extends React.Component<any, Stats> {
           })
         }}
       >
-        {testEvent.eventIndex}/{testEvent.answerIndex}
+        {testEvent.gameStateBeforeAnswer.variables['STEP']}
       </TestCellText>
       {testEvent.children && <TestCellChildren>
         {testEvent.children?.map(e => this.renderResultCell(e))}
