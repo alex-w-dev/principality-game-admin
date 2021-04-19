@@ -40,7 +40,7 @@ const TestCellChildren = styled.div`
 const Result = styled.div<{atTop: boolean}>`
   position: fixed;
   ${props => props.atTop ? 'top: 0' : 'bottom: 0'};
-  right: 0;
+  left: 0;
   max-height: 50vh;
   overflow-y: auto;
   border: 1px solid black;
