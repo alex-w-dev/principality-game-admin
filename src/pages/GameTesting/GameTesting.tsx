@@ -3,7 +3,7 @@ import styles from './GameTesting.module.scss';
 import { toJS } from 'mobx';
 import { mainConfigStore } from '../../hooks/use-main-config-store';
 import { GameTester, GameTesterStatus, ITestEvent } from '../../game/game-tester';
-import { EventType, GameOverType } from '../../stores/main-config.store';
+import { EventType, GameOverType, IVariable } from '../../stores/main-config.store';
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 import VariableStateTable from '../../components/VariableStateTable';
@@ -18,7 +18,7 @@ function GOToColor(gameOver: GameOverType): string {
 }
 
 const TestTable = styled.div`
-  width: 99999px;
+  /*width: 99999px;*/
 `
 
 const TestCellText = styled.div<{gameOver?: GameOverType}>`
@@ -46,11 +46,30 @@ const Result = styled.div<{atTop: boolean}>`
   border: 1px solid black;
 `
 
+const TopForm = styled.div`
+  display: grid;
+  height: 90vh;
+  grid-template-columns: 1fr 1fr 2fr;
+`
+
+const TopFormBlock = styled.div`
+  overflow: auto;
+  height: 100%;
+  border-left: 1px solid #e0e0e0;
+  padding: 0 5px;
+  
+  input {
+    max-width: 70px;
+  }
+`
+
+
 interface Stats {
   useRandomEvents: boolean;
   stepsLimit: number;
   hoveredTestEvent?: ITestEvent;
   resultAtTop: boolean;
+  startVariables: IVariable[];
 }
 
 export default class GameTesting extends React.Component<any, Stats> {
@@ -58,6 +77,7 @@ export default class GameTesting extends React.Component<any, Stats> {
   state = {
     useRandomEvents: false,
     stepsLimit: 10,
+    startVariables: JSON.parse(JSON.stringify(mainConfigStore.mainConfig.variables)),
     resultAtTop: true,
   } as Stats
 
@@ -84,7 +104,7 @@ export default class GameTesting extends React.Component<any, Stats> {
     })
   }
 
-  renderTooltip() {
+  renderHoveredEvent() {
     if (!this.state.hoveredTestEvent) {
       return null;
     }
@@ -92,57 +112,62 @@ export default class GameTesting extends React.Component<any, Stats> {
     const hoveredTestEvent = this.state.hoveredTestEvent;
     const event = hoveredTestEvent.eventIndex >= 0 ? this.gameTester.mainConfig.events[hoveredTestEvent.eventIndex] : null;
 
+    return <table
+      style={{
+        background: 'white',
+      }}
+    >
+      <thead>
+      <tr>
+        <td>
+          Variables After Answer
+        </td>
+        <td>
+          Event
+        </td>
+        <td>
+          Answer
+        </td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>
+          <VariableStateTable
+            variables={hoveredTestEvent.gameStateBeforeAnswer.variables}
+          />
+        </td>
+        <td>
+          {event && <EventDescription
+            event={event}
+          /> || 'Empty Event'}
+        </td>
+        <td>
+          {event && event.answers.map((a, index )=> {
+            const t = a.choiceText.ru || a.resultText.ru;
+
+            return <div
+              style={{ marginTop: '15px' }}
+              key={index}
+            >
+              {index === hoveredTestEvent.answerIndex && <b>{t}</b> || t}
+            </div>
+          })}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  }
+
+  renderTooltip() {
+
     return <Result
       atTop={this.state.resultAtTop}
       onMouseEnter={() => this.setState({
         resultAtTop: !this.state.resultAtTop,
       })}
     >
-      <table
-        style={{
-          background: 'white',
-        }}
-      >
-        <thead>
-        <tr>
-          <td>
-            Variables After Answer
-          </td>
-          <td>
-            Event
-          </td>
-          <td>
-            Answer
-          </td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>
-            <VariableStateTable
-              variables={hoveredTestEvent.gameStateBeforeAnswer.variables}
-            />
-          </td>
-          <td>
-            {event && <EventDescription
-              event={event}
-            /> || 'Empty Event'}
-          </td>
-          <td>
-            {event && event.answers.map((a, index )=> {
-              const t = a.choiceText.ru || a.resultText.ru;
-
-              return <div
-                style={{ marginTop: '15px' }}
-                key={index}
-              >
-                {index === hoveredTestEvent.answerIndex && <b>{t}</b> || t}
-              </div>
-            })}
-          </td>
-        </tr>
-        </tbody>
-      </table>
+      {this.renderHoveredEvent()}
     </Result>
   }
 
@@ -189,72 +214,105 @@ export default class GameTesting extends React.Component<any, Stats> {
     return <div
       className={styles.variablesEditor}
     >
-      <label>
-        <span>Включать случайные события</span>
-        <input
-          type="checkbox"
-          checked={this.state.useRandomEvents}
-          onChange={(e) => {
-            this.setState({
-              useRandomEvents: e.target.checked,
-            })
-          }}
-        />
-      </label>
-      <br/>
-      <label>
-        <span>Лимит ходов</span>
-        <input
-          type="number"
-          value={this.state.stepsLimit}
-          onChange={(e) => {
-            this.setState({
-              stepsLimit: parseInt(e.target.value),
-            })
-          }}
-        />
-      </label>
-      <br/>
-      <button
-        disabled={this.gameTester.status !== GameTesterStatus.Complete}
-        onClick={() =>{
-          const config  = toJS(mainConfigStore.mainConfig);
+      <TopForm>
+        <TopFormBlock>
+          <label>
+            <span>Включать случайные события</span>
+            <input
+              type="checkbox"
+              checked={this.state.useRandomEvents}
+              onChange={(e) => {
+                this.setState({
+                  useRandomEvents: e.target.checked,
+                })
+              }}
+            />
+          </label>
+          <br/>
+          <label>
+            <span>Лимит ходов</span>
+            <input
+              type="number"
+              value={this.state.stepsLimit}
+              onChange={(e) => {
+                this.setState({
+                  stepsLimit: parseInt(e.target.value),
+                })
+              }}
+            />
+          </label>
+          <br/>
+          <div>Начать с переменных:</div>
+          <table>
+            <tbody>
+            {this.state.startVariables.map(startVar => {
+              return <tr key={startVar.code}>
+                <td style={{textAlign: 'right'}}>{startVar.code}</td>
+                <td>
+                  <input
+                    type="number"
+                    min={startVar.min}
+                    max={startVar.max}
+                    value={startVar.initial}
+                    onChange={(e) => {
+                      startVar.initial = parseInt(e.target.value);
+                      this.forceUpdate();
+                    }}
+                  />
+                </td>
+              </tr>
+            })}
+            </tbody>
+          </table>
 
-          if (!this.state.useRandomEvents) {
-            config.events = config.events.filter(e => e.type !== EventType.Random);
+          <br/>
+          <button
+            disabled={this.gameTester.status !== GameTesterStatus.Complete}
+            onClick={() =>{
+              const config  = toJS(mainConfigStore.mainConfig);
+
+              if (!this.state.useRandomEvents) {
+                config.events = config.events.filter(e => e.type !== EventType.Random);
+              }
+              config.variables = JSON.parse(JSON.stringify(this.state.startVariables));
+
+              this.gameTester = new GameTester(config, this.state.stepsLimit);
+              this.gameTester.startCompleteTest();
+              this.forceUpdate();
+            } }
+          >Старт</button>
+          <button
+            disabled={this.gameTester.status !== GameTesterStatus.Process}
+            onClick={() =>{
+              this.gameTester.stop();
+              this.forceUpdate();
+            } }
+          >Stop</button>
+        </TopFormBlock>
+        <TopFormBlock>
+          Статус: {this.gameTester.status}, проверено: {this.gameTester.answeredCount}, осталось: {this.gameTester.needToNextEvent.length}
+          <hr/>
+          <div>
+            Результаты:
+          </div>
+          <div>
+            случаи когда была явная победа (коллво): {this.gameTester.gameOverWinsCount}
+          </div>
+          <div>
+            случаи когда был проигрыш: {this.gameTester.gameOverDefeatsCount}
+          </div>
+          {
+            this.renderResultTable()
           }
+        </TopFormBlock>
+        <TopFormBlock>
+          {this.renderHoveredEvent()}
+        </TopFormBlock>
+      </TopForm>
 
-          this.gameTester = new GameTester(config, this.state.stepsLimit);
-          this.gameTester.startCompleteTest();
-          this.forceUpdate();
-        } }
-      >Старт</button>
-      <button
-        disabled={this.gameTester.status !== GameTesterStatus.Process}
-        onClick={() =>{
-          this.gameTester.stop();
-          this.forceUpdate();
-        } }
-      >Stop</button>
-      <hr/>
-      Статус: {this.gameTester.status}, проверено: {this.gameTester.answeredCount}, осталось: {this.gameTester.needToNextEvent.length}
-      <hr/>
-      <div>
-        Результаты:
-      </div>
-      <div>
-        случаи когда была явная победа (коллво): {this.gameTester.gameOverWinsCount}
-      </div>
-      <div>
-        случаи когда был проигрыш: {this.gameTester.gameOverDefeats.length}
-      </div>
-      {
-        this.renderResultTable()
-      }
-
-      {
+      {/*{
         this.renderTooltip()
-      }
+      }*/}
     </div>;
   }
 }

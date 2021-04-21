@@ -21,11 +21,7 @@ export class GameTester {
   needToNextEvent: ITestEvent[] = [];
   answeredCount = 0;
 
-  gameOverDefeats: {
-    eventIndex: number,
-    gameStatsVariables: IGameState['variables'],
-    answer: ITestEvent,
-  }[] = [];
+  gameOverDefeatsCount = 0;
   gameOverWinsCount = 0;
 
   constructor(
@@ -90,13 +86,9 @@ export class GameTester {
           answered.gameOver = isGameOver;
 
           if (isGameOver === GameOverType.Defeat) {
-            this.gameOverDefeats.push({
-              eventIndex,
-              gameStatsVariables: gameStateAfterAnswer.variables,
-              answer: answered,
-            });
+            this.gameOverDefeatsCount++;
           } else if (isGameOver === GameOverType.Win) {
-            this.gameOverWinsCount ++;
+            this.gameOverWinsCount++;
           }
 
         } else if (this.stepsLimit && gameStateAfterAnswer.variables['STEP'] > this.stepsLimit) {
