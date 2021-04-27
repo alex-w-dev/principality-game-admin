@@ -24,7 +24,14 @@ const TestTable = styled.div`
 const TestCellText = styled.div<{gameOver?: GameOverType}>`
   min-width: 10px;
   min-height: 10px;
-  background: ${props => GOToColor(props.gameOver)};
+  color: ${props => GOToColor(props.gameOver)};
+  :hover {
+    cursor: pointer;
+    background: #62dbff;
+  }
+  :focus {
+    background: #62dbff;
+  }
 `
 
 const TestCell = styled.div`
@@ -64,22 +71,24 @@ const TopFormBlock = styled.div`
 `
 
 
-interface Stats {
+interface IState {
   useRandomEvents: boolean;
   stepsLimit: number;
   hoveredTestEvent?: ITestEvent;
+  focusedTestEvent?: ITestEvent;
   resultAtTop: boolean;
   startVariables: IVariable[];
 }
 
-export default class GameTesting extends React.Component<any, Stats> {
+export default class GameTesting extends React.Component<any, IState> {
 
   state = {
     useRandomEvents: false,
+    focusedTestEvent: false,
     stepsLimit: 10,
     startVariables: JSON.parse(JSON.stringify(mainConfigStore.mainConfig.variables)),
     resultAtTop: true,
-  } as Stats
+  } as IState
 
   gameTester = new GameTester(mainConfigStore.mainConfig, this.state.stepsLimit);
 
@@ -105,12 +114,13 @@ export default class GameTesting extends React.Component<any, Stats> {
   }
 
   renderHoveredEvent() {
-    if (!this.state.hoveredTestEvent) {
+    const eventForRender = this.state.focusedTestEvent || this.state.hoveredTestEvent
+
+    if (!eventForRender) {
       return null;
     }
 
-    const hoveredTestEvent = this.state.hoveredTestEvent;
-    const event = hoveredTestEvent.eventIndex >= 0 ? this.gameTester.mainConfig.events[hoveredTestEvent.eventIndex] : null;
+    const event = eventForRender.eventIndex >= 0 ? this.gameTester.mainConfig.events[eventForRender.eventIndex] : null;
 
     return <table
       style={{
@@ -134,7 +144,7 @@ export default class GameTesting extends React.Component<any, Stats> {
       <tr>
         <td>
           <VariableStateTable
-            variables={hoveredTestEvent.gameStateBeforeAnswer.variables}
+            variables={eventForRender.gameStateBeforeAnswer.variables}
           />
         </td>
         <td>
@@ -150,7 +160,7 @@ export default class GameTesting extends React.Component<any, Stats> {
               style={{ marginTop: '15px' }}
               key={index}
             >
-              {index === hoveredTestEvent.answerIndex && <b>{t}</b> || t}
+              {index === eventForRender.answerIndex && <b>{t}</b> || t}
             </div>
           })}
         </td>
@@ -174,9 +184,28 @@ export default class GameTesting extends React.Component<any, Stats> {
   renderResultCell(testEvent: ITestEvent) {
     return <TestCell key={`${testEvent.eventIndex}-${testEvent.answerIndex}`}>
       <TestCellText
+        tabIndex={1}
         gameOver={testEvent.gameOver}
+        onFocus={e => {
+          e.stopPropagation();
+          this.setState({
+            focusedTestEvent: testEvent,
+            hoveredTestEvent: testEvent,
+          });
+        }}
+        onBlur={e => {
+          e.stopPropagation();
+          this.setState({
+            focusedTestEvent: null,
+          });
+        }}
         onMouseEnter={e => {
           e.stopPropagation();
+
+          if (this.state.focusedTestEvent) {
+            return;
+          }
+
           this.setState({
             hoveredTestEvent: testEvent,
           })
