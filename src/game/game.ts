@@ -93,6 +93,8 @@ export class Game {
 
     event = toJS(event || this.getFakeEvent());
 
+    event = JSON.parse(JSON.stringify(event));
+
     // уберем ответы, которые не соответсвуют их условиям
     event.answers = event.answers.filter(this.eventConditionFilter);
 
@@ -132,6 +134,7 @@ export class Game {
       e.text.ru === event.text.ru &&
       e.title.ru === event.title.ru &&
       e.answers.every((a, i) => (
+        event.answers[i] &&
         event.answers[i].resultText.ru === a.resultText.ru &&
         event.answers[i].choiceText.ru === a.choiceText.ru
       ) )
