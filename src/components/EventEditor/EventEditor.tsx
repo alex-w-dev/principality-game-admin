@@ -7,6 +7,23 @@ import { eventTypeToName } from '../../utils/event-type-to-name';
 import ConditionBlockEditor from '../ConditionBlockEditor/ConditionBlockEditor';
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
 import { IEvent, MainConfigStore } from '../../stores/main-config.store';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+import { stringifyCondition } from '../../utils/stringify-condition';
+import styled from 'styled-components';
+
+const SmallFontsize = styled.span`
+ font-size: 11px;
+`
+const GrayFont = styled.span`
+ color: gray;
+`
+const RedFont = styled.span`
+  color: #f84949;
+`
+const GreenFont = styled.span`
+  color: #33bb2e;
+`
 
 function renderVariants(mainConfigStore: MainConfigStore, event: IEvent) {
   return <>
@@ -26,17 +43,48 @@ function renderVariants(mainConfigStore: MainConfigStore, event: IEvent) {
       Если нет вариантов, то будет показано только описание события и кнопка &#34;Далее&#34;
     </div>}
 
-    { event.answers.map((eventAnswer, index) => {
-      return <div
-        className={styles.rewardContainer}
-        key={index}
-      >
-        <AnswerEditor
-          answer={eventAnswer}
-          event={event}
-        />
-      </div>
-    }) }
+    <Tabs>
+      <TabList>
+        { event.answers.map((eventAnswer, index) => {
+          return <Tab
+            key={index}
+          >
+            <div>
+              {index} - {eventAnswer.rewards.map((reward) => <>
+                <SmallFontsize>{reward.variableCode}: &nbsp;</SmallFontsize>
+                {reward.value > 0
+                  ? <GreenFont>+{reward.value.toString()}</GreenFont>
+                  : <RedFont>{reward.value.toString()}</RedFont>}
+                ;
+              </>) }
+              {!eventAnswer.rewards.length && <GrayFont>без изменений</GrayFont>}
+            </div>
+            {!!eventAnswer.conditionBlock?.conditions?.length && <div>
+              <SmallFontsize>
+                {stringifyCondition(eventAnswer.conditionBlock)}
+              </SmallFontsize>
+            </div>}
+          </Tab>
+        }) }
+      </TabList>
+
+
+      { event.answers.map((eventAnswer, index) => {
+        return <TabPanel
+          key={index}
+        >
+          <div
+            className={styles.rewardContainer}
+          >
+            <AnswerEditor
+              answer={eventAnswer}
+              event={event}
+            />
+          </div>
+        </TabPanel>
+      }) }
+    </Tabs>
+
   </>
 }
 
