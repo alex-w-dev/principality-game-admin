@@ -5,6 +5,8 @@ const defaultMainConfig = require('./default-main-config.json');
 
 export interface IVariable {
   code: string;
+  title: string;
+  description: string;
   initial: number;
   min: number | '';
   max: number | '';
@@ -225,6 +227,8 @@ export class MainConfigStore {
   addNewVariable(): void {
     this.mainConfig.variables.push({
       code: 'NEW_VAR',
+      title: '',
+      description: '',
       initial: 0,
       max: '',
       min: '',

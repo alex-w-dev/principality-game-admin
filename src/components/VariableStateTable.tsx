@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { variableCodeToTitle } from '../utils/variable-code-to-title';
 
 type IProps = {
   variables: {[code: string]: number}
@@ -11,7 +12,7 @@ const VariableStateTable: FC<IProps> = (props: IProps) => {
       return <tr
         key={variableCode}
       >
-        <td>{variableCode}</td>
+        <td>{variableCodeToTitle(variableCode)}</td>
         <td>{value}</td>
       </tr>
     })}

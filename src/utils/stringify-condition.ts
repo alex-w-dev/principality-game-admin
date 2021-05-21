@@ -1,4 +1,5 @@
 import { ConditionBlockType, ConditionSign, ICondition, IConditionBlock } from '../stores/main-config.store';
+import { variableCodeToTitle } from './variable-code-to-title';
 
 export function stringifyCondition(condition: ICondition | IConditionBlock): string {
   if ((condition as ICondition).variableCode) {
@@ -6,12 +7,12 @@ export function stringifyCondition(condition: ICondition | IConditionBlock): str
 
     switch (condition.sign) {
       case ConditionSign.Equal:
-        return `${condition.variableCode}=${condition.value}`;
+        return `${variableCodeToTitle(condition.variableCode)}=${condition.value}`;
       case ConditionSign.GreaterThan:
-        return `${condition.variableCode}>${condition.value}`;
+        return `${variableCodeToTitle(condition.variableCode)}>${condition.value}`;
       case ConditionSign.LessThan:
       default:
-        return `${condition.variableCode}<${condition.value}`;
+        return `${variableCodeToTitle(condition.variableCode)}<${condition.value}`;
     }
   } else {
     condition = condition as IConditionBlock;

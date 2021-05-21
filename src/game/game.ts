@@ -8,7 +8,8 @@ import {
   ICondition,
   IConditionBlock,
   IEvent,
-  IMainConfig, IVariable,
+  IMainConfig,
+  IVariable,
 } from '../stores/main-config.store';
 import { toJS } from 'mobx';
 

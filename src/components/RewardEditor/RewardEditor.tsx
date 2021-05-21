@@ -3,6 +3,7 @@ import styles from './RewardEditor.module.scss';
 import { inject, observer } from 'mobx-react';
 import { IAnswer, IStepReward } from '../../stores/main-config.store';
 import { useMainConfigStore } from '../../hooks/use-main-config-store';
+import { getVariableName } from '../../utils/get-variable-name';
 
 interface Props {
   reward: IStepReward;
@@ -25,7 +26,7 @@ export default inject()(
             return <option
               key={variable.code}
               value={variable.code}>
-              {variable.code}
+              {getVariableName(variable)}
             </option>
           })}
         </select>

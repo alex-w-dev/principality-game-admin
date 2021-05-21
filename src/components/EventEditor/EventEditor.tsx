@@ -11,6 +11,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import { stringifyCondition } from '../../utils/stringify-condition';
 import styled from 'styled-components';
+import { variableCodeToTitle } from '../../utils/variable-code-to-title';
 
 const SmallFontsize = styled.span`
  font-size: 11px;
@@ -51,7 +52,7 @@ function renderVariants(mainConfigStore: MainConfigStore, event: IEvent) {
           >
             <div>
               {index} - {eventAnswer.rewards.map((reward) => <>
-                <SmallFontsize>{reward.variableCode}: &nbsp;</SmallFontsize>
+                <SmallFontsize>{variableCodeToTitle(reward.variableCode)}: &nbsp;</SmallFontsize>
                 {reward.value > 0
                   ? <GreenFont>+{reward.value.toString()}</GreenFont>
                   : <RedFont>{reward.value.toString()}</RedFont>}

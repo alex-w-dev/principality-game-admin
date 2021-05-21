@@ -4,6 +4,7 @@ import { ConditionSign, ICondition, IConditionBlock, IVariable } from '../../sto
 import { eventSignToName } from '../../utils/condition-sign-to-name';
 import { inject, observer } from 'mobx-react';
 import { useMainConfigStore } from '../../hooks/use-main-config-store';
+import { getVariableName } from '../../utils/get-variable-name';
 
 interface Props {
   condition: ICondition,
@@ -32,7 +33,7 @@ export default inject()(
                 return <option
                   key={variable.code}
                   value={variable.code}>
-                  {variable.code}
+                  {getVariableName(variable)}
                 </option>
               })}
             </select>

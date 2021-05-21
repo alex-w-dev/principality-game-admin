@@ -76,7 +76,9 @@ export default inject()(
       <table>
         <thead>
         <tr>
-          <td>Код</td>
+          <td>Название (для понимания)</td>
+          <td><b>Код</b></td>
+          <td>Описание (если надо)</td>
           <td>Первоначатьное значение</td>
           <td>Минимальное значение</td>
           <td>Максимальное значение</td>
@@ -90,8 +92,20 @@ export default inject()(
           >
             <td>
               <input
+                value={variable.title}
+                onChange={(a) => mainConfigStore.setVariableData(variable, { title: a.target.value })}
+              />
+            </td>
+            <td>
+              <input
                 value={variable.code}
                 onChange={(a) => mainConfigStore.setVariableData(variable, { code: a.target.value })}
+              />
+            </td>
+            <td>
+              <textarea
+                value={variable.description}
+                onChange={(a) => mainConfigStore.setVariableData(variable, { description: a.target.value })}
               />
             </td>
             <td>
