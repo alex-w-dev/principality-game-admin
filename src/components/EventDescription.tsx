@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { EventType, IEvent } from '../stores/main-config.store';
+import { ImageContainer } from './EventEditor/EventEditor';
 
 type IProps = {
   event:IEvent
@@ -30,6 +31,10 @@ const EventDescription: FC<IProps> = (props: IProps) => {
     <div hidden={props.event.type !== EventType.Critical}>
       Критическое
     </div>
+
+    {props.event.imageUrl && <ImageContainer>
+      <img src={props.event.imageUrl} alt=""/>
+    </ImageContainer>}
   </div>
 }
 

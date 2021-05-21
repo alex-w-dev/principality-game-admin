@@ -5,16 +5,20 @@ import { mainConfigStore } from '../../hooks/use-main-config-store';
 import { EventType, GameOverType, IAnswer, IEvent } from '../../stores/main-config.store';
 import VariableStateTable from '../../components/VariableStateTable';
 import EventDescription from '../../components/EventDescription';
+import { ImageContainer } from '../../components/EventEditor/EventEditor';
 
 interface State {
   currentEvent: IEvent;
   gameState: IGameState;
   isGameOver: GameOverType | null;
   currentAnswer: IAnswer;
+  isGameStarted: boolean;
 }
 
 export default class GamePage extends React.Component<any, State> {
   game: Game;
+
+  private currentAudio: HTMLAudioElement;
 
   constructor(props) {
     super(props);
@@ -22,14 +26,28 @@ export default class GamePage extends React.Component<any, State> {
     this.game = new Game(mainConfigStore.mainConfig);
 
     this.state = {
-      currentEvent: this.game.getCurrentEvent(),
+      currentEvent: null,
       gameState: this.game.getClonedGameState(),
       isGameOver: null,
+      isGameStarted: false,
       currentAnswer: null,
     }
   }
 
+  startGame = () => {
+    this.setState({isGameStarted: true});
+    this.onMoveOnClick();
+  }
+
+  componentWillUnmount() {
+    this.playAudioOnce();
+  }
+
   render() {
+    if (!this.state.isGameStarted) {
+      return <button onClick={this.startGame}>NEW GAME</button>
+    }
+
     return <div
       className={styles.game}
     >
@@ -77,6 +95,9 @@ export default class GamePage extends React.Component<any, State> {
                     <b>Исход задания:</b>
                   </div>
                   <div dangerouslySetInnerHTML={{__html: this.state.currentAnswer.resultText.ru}} />
+                  {this.state.currentAnswer.imageUrl && <ImageContainer>
+                    <img src={this.state.currentAnswer.imageUrl} alt=""/>
+                  </ImageContainer>}
                 </div>
                 <div>
                   <div>
@@ -102,6 +123,8 @@ export default class GamePage extends React.Component<any, State> {
       return;
     }
     const isGameOver = this.game.giveAnswer(this.state.currentEvent, answer);
+    this.playAudioOnce(answer.voiceUrl.ru);
+
     this.setState({
       currentAnswer: answer,
       isGameOver,
@@ -124,6 +147,7 @@ export default class GamePage extends React.Component<any, State> {
       alert('Ты проиграл! Ходов больше нет!');
     } else {
       const currentEvent = this.game.getCurrentEvent();
+      this.playAudioOnce(currentEvent.voiceUrl.ru);
 
       this.setState({
         currentEvent: currentEvent,
@@ -135,5 +159,18 @@ export default class GamePage extends React.Component<any, State> {
         }
       })
     }
+  }
+
+  private playAudioOnce(audioUrl?: string) {
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio.currentTime = 0;
+      this.currentAudio = null;
+    }
+
+    if (!audioUrl) return;
+
+    this.currentAudio = new Audio(audioUrl);
+    this.currentAudio.play();
   }
 }
