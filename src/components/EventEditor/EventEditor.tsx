@@ -26,7 +26,7 @@ const GreenFont = styled.span`
   color: #33bb2e;
 `
 
-const ImageContainer = styled.div`
+export const ImageContainer = styled.div`
   height: 200px;
   
   img {

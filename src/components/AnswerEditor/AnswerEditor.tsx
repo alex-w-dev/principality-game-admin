@@ -5,6 +5,7 @@ import { GameOverType, IAnswer, IEvent, IStepReward } from '../../stores/main-co
 import { useMainConfigStore } from '../../hooks/use-main-config-store';
 import ConditionBlockEditor from '../ConditionBlockEditor/ConditionBlockEditor';
 import RewardEditor from '../RewardEditor/RewardEditor';
+import { ImageContainer } from '../EventEditor/EventEditor';
 
 interface Props {
   event: IEvent;
@@ -45,20 +46,6 @@ export default inject()(
           <ConditionBlockEditor conditionBlock={props.answer.conditionBlock} />
         </label>
         <label >
-          <div>Исход (РУС)</div>
-          <textarea
-            value={props.answer.resultText.ru}
-            onChange={(e) => mainConfigStore.setSomeData(props.answer, 'resultText.ru', e.target.value) }
-          />
-        </label>
-        <label >
-          <div>Исход (ENG)</div>
-          <textarea
-            value={props.answer.resultText.en}
-            onChange={ (e) => mainConfigStore.setSomeData(props.answer, 'resultText.en', e.target.value) }
-          />
-        </label>
-        <label >
           Закончить игру?
           <select
             value={props.answer.gameOver}
@@ -84,9 +71,53 @@ export default inject()(
             </div>
           }) }
         </div>
-        <button
-          onClick={() => mainConfigStore.answerAddNewReward(props.answer)}
-        >Добавить награду</button>
+        <label>
+          <br/>
+          <button
+            onClick={() => mainConfigStore.answerAddNewReward(props.answer)}
+          >Добавить награду</button>
+        </label>
+        <label >
+          <div>Исход (РУС)</div>
+          <textarea
+            value={props.answer.resultText.ru}
+            onChange={(e) => mainConfigStore.setSomeData(props.answer, 'resultText.ru', e.target.value) }
+          />
+        </label>
+        <label >
+          <div>Исход (ENG)</div>
+          <textarea
+            value={props.answer.resultText.en}
+            onChange={ (e) => mainConfigStore.setSomeData(props.answer, 'resultText.en', e.target.value) }
+          />
+        </label>
+
+        <label >
+          <div>Изображение</div>
+          <input
+            value={props.answer.imageUrl}
+            onChange={ (e) => mainConfigStore.setSomeData(props.answer, 'imageUrl', e.target.value) }
+          />
+          {props.answer.imageUrl && <ImageContainer>
+            <img src={props.answer.imageUrl} alt=""/>
+          </ImageContainer>}
+        </label>
+        <label >
+          <div>Голос (РУС)</div>
+          <input
+            value={props.answer.voiceUrl.ru}
+            onChange={ (e) => mainConfigStore.setSomeData(props.answer, 'voiceUrl.ru', e.target.value) }
+          />
+          {props.answer.voiceUrl.ru && <audio src={props.answer.voiceUrl.ru} controls/>}
+        </label>
+        <label >
+          <div>Голос (ENG)</div>
+          <input
+            value={props.answer.voiceUrl.en}
+            onChange={ (e) => mainConfigStore.setSomeData(props.answer, 'voiceUrl.en', e.target.value) }
+          />
+          {props.answer.voiceUrl.en && <audio src={props.answer.voiceUrl.en} controls/>}
+        </label>
 
       </div>
     }
