@@ -26,6 +26,16 @@ const GreenFont = styled.span`
   color: #33bb2e;
 `
 
+const ImageContainer = styled.div`
+  height: 200px;
+  
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: scale-down;
+  }
+`
+
 function renderVariants(mainConfigStore: MainConfigStore, event: IEvent) {
   return <>
     <h4>Варианты ответов:</h4>
@@ -138,6 +148,32 @@ export default inject()(
             <label>
               <div>Условие того, что это событие вызовется:</div>
               <ConditionBlockEditor conditionBlock={event.conditionBlock} />
+            </label>
+            <label >
+              <div>Изображение</div>
+              <input
+                value={event.imageUrl}
+                onChange={ (e) => mainConfigStore.setSomeData(event, 'imageUrl', e.target.value) }
+              />
+              {event.imageUrl && <ImageContainer>
+                <img src={event.imageUrl} alt=""/>
+              </ImageContainer>}
+            </label>
+            <label >
+              <div>Голос (РУС)</div>
+              <input
+                value={event.voiceUrl.ru}
+                onChange={ (e) => mainConfigStore.setSomeData(event, 'voiceUrl.ru', e.target.value) }
+              />
+              {event.voiceUrl.ru && <audio src={event.voiceUrl.ru} controls/>}
+            </label>
+            <label >
+              <div>Голос (ENG)</div>
+              <input
+                value={event.voiceUrl.en}
+                onChange={ (e) => mainConfigStore.setSomeData(event, 'voiceUrl.en', e.target.value) }
+              />
+              {event.voiceUrl.en && <audio src={event.voiceUrl.en} controls/>}
             </label>
           </div>
           <div>
