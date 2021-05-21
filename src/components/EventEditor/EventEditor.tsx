@@ -51,13 +51,15 @@ function renderVariants(mainConfigStore: MainConfigStore, event: IEvent) {
             key={index}
           >
             <div>
-              {index} - {eventAnswer.rewards.map((reward) => <>
+              {index} - {eventAnswer.rewards.map((reward, index) => <span
+                key={index}
+              >
                 <SmallFontsize>{variableCodeToTitle(reward.variableCode)}: &nbsp;</SmallFontsize>
                 {reward.value > 0
                   ? <GreenFont>+{reward.value.toString()}</GreenFont>
                   : <RedFont>{reward.value.toString()}</RedFont>}
                 ;
-              </>) }
+              </span>) }
               {!eventAnswer.rewards.length && <GrayFont>без изменений</GrayFont>}
             </div>
             {!!eventAnswer.conditionBlock?.conditions?.length && <div>
